@@ -64,7 +64,7 @@ while playing and player.alive:
         command = input("What now? ")
         commandWords = command.split()
         if commandWords[0].lower() == "go":   #cannot handle multi-word directions
-            player.goDirection(commandWords[1]) 
+            player.goDirection(commandWords[1])
             timePasses = True
         elif commandWords[0].lower() == "pickup":  #can handle multi-word objects
             targetName = command[7:]
@@ -74,8 +74,18 @@ while playing and player.alive:
             else:
                 print("No such item.")
                 commandSuccess = False
+
+        elif commandWords[0].lower() == "drop":
+            targetName = command[5:]
+            target = player.getInventoryItemByName(targetName)
+            if target != False: #   If getInventoryItemByName doesn't return false...
+                player.drop(target)
+            else:
+                print("No such item.")
+                commandSuccess = False
+
         elif commandWords[0].lower() == "inventory":
-            player.showInventory()        
+            player.showInventory()
         elif commandWords[0].lower() == "help":
             showHelp()
         elif commandWords[0].lower() == "exit":
@@ -93,7 +103,3 @@ while playing and player.alive:
             commandSuccess = False
     if timePasses == True:
         updater.updateAll()
-
-    
-
-

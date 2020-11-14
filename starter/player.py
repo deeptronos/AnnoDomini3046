@@ -15,6 +15,21 @@ class Player:
         self.items.append(item)
         item.loc = self
         self.location.removeItem(item)
+
+    def drop(self, item):
+        print("item: ", item)
+        print("self.items: ", self.items)
+        self.items.remove(item)
+        item.loc = self.location
+        self.location.addItem(item)
+
+    def getInventoryItemByName(self, name): #   Get item in inventory by name
+        for i in self.items:
+            if i.name.lower() == name.lower():
+                return i
+
+        return False
+
     def showInventory(self):
         clear()
         print("You are currently carrying:")
@@ -39,4 +54,3 @@ class Player:
             self.alive = False
         print()
         input("Press enter to continue...")
-
