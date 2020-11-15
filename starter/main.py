@@ -13,10 +13,10 @@ def createWorld():
     # c = Room("You are in room 3")
     # d = Room("You are in room 4")
     #House Rooms:
-    br = Room("Your Bedroom.")
-    lr = Room("Your Living Room.")
+    br = Room("Your Bedroom")
+    lr = Room("Your Living Room")
     #bY = Room("Your Backyard. It contains a modest g is 6x2 feet large. ")
-    bY = Room("Your Backyard.")
+    bY = Room("Your Backyard")
     #External Rooms:
     outside         = Room("Outside")   #   Generic 'outside' location, to tie together all of the colony's accessable location
     farmersMarket   = Room("The farmer's market")
@@ -32,6 +32,8 @@ def createWorld():
     Room.connectRooms(outside, "garden supply", gardenSupply, "home")
     Room.connectRooms(outside, "field office", fieldOffice, "home")
 
+    i = Item("Macbook", "This is your 3019 16-Inch Macbook Vro.")
+    i.putInRoom(br)
     # Room.connectRooms(a, "east", b, "west")
     # Room.connectRooms(c, "east", d, "west")
     # Room.connectRooms(a, "north", c, "south")
@@ -112,6 +114,12 @@ while playing and player.alive:
             else:
                 print("No such item.")
                 commandSuccess = False
+
+        elif commandWords[0].lower() == "inspect":
+            targetName = command[8:]
+            player.inspectItem(targetName)
+            #print("target: ", target)
+
         elif commandWords[0].lower() == "me":
             showPlayerStats()
         elif commandWords[0].lower() == "inventory":
