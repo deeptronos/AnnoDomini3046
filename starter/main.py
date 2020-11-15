@@ -49,30 +49,24 @@ def header():
 
     iterant = 0
     line1, line2, line3, output = "", "", "", ""
-    # for i in range(wDim):
-    #     if i < len(date):
-    #         line1 += date[i]
-    #     elif i < wDim - len(title):
-    #         line1 += " "
-    #     elif i >= wDim - len(title):
-    #         line1 += title[i - (wDim - len(title))]
     for i in range(wDim):   #   For loop to make a line of text the width of the terminal with the title centered in the middle
         if i < (wDim // 2) - (len(title)//2) or i >= (wDim // 2) + (len(title)//2):
             line1 += " "
         elif i >= (wDim // 2) - (len(title)//2):
             line1 += title[i - (wDim // 2) - (len(title)//2)]
 
-    for i in range(wDim):   #   For loop that makes a line of text
+    for i in range(wDim):   #   For loop that makes a line of text with the date, then fills to the window width with a symbol
         if (i) < len(date) + 2 and i > 1:
             line2 += date[i - 2]
         elif i > len(date) + 2:
             line2 += "𖡻"
         else:
             line2 += " "
-    for i in range(wDim):
+
+    for i in range(wDim):   #   For loop that fills a string to window width with a symbol
         line3 += "𝍅"
 
-    for i in range(3):
+    for i in range(3):  #   Puts all these different strings into one, separating them by new lines
         if i == 0:
             output += line1
         elif i == 1:
@@ -82,6 +76,7 @@ def header():
         output += "\n"
 
     return output
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -118,13 +113,29 @@ def showHelp():
 def showPlayerStats():
     clear()
     print("Let's take a look at you:")
-    print('\n')
+    print(visualizeContainer(26, "down"))
     for i in player.attributes: #   For each string in the list player.attributes...
         player.displayStat(i)   #   Display that stat
-    print()
+    print(visualizeContainer(26, "up"))
     input("Press enter to continue...")
 
-
+def visualizeContainer(width, direction):
+    output = ""
+    charList = ["╶", "╴", "╭","╮","╰","╯","━", "─"]
+    for i in range(width):
+        if i == 0:
+            if direction == "up":
+                output += charList[4]
+            elif direction == "down":
+                output += charList[2]
+        elif i == width - 1:
+            if direction == "up":
+                output += charList[5]
+            elif direction == "down":
+                output += charList[3]
+        else:
+            output += charList[7]
+    return output
 
 createWorld()
 playing = True

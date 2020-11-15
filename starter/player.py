@@ -9,7 +9,8 @@ class Player:
         self.items = []
         self.health = 50
         self.alive = True
-        self.attributes = ["self.health"]     #   For use in displaying current status ("me" command)
+        self.currency = 0
+        self.attributes = ["self.health", "self.currency"]     #   For use in displaying current status ("me" command)
     def goDirection(self, direction):
         self.location = self.location.getDestination(direction)
     def pickup(self, item):
