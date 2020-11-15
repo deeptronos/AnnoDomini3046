@@ -9,6 +9,7 @@ class Player:
         self.items = []
         self.health = 50
         self.alive = True
+        self.attributes = ["self.health"]     #   For use in displaying current status ("me" command)
     def goDirection(self, direction):
         self.location = self.location.getDestination(direction)
     def pickup(self, item):
@@ -22,6 +23,9 @@ class Player:
         self.items.remove(item)
         item.loc = self.location
         self.location.addItem(item)
+
+    def displayStat(self, statName):    #   Function code concept credit to https://stackoverflow.com/a/32001042
+        print(statName, '=', repr(eval(statName)))
 
     def getInventoryItemByName(self, name): #   Get item in inventory by name
         for i in self.items:

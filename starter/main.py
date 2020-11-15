@@ -51,7 +51,14 @@ def showHelp():
     print()
     input("Press enter to continue...")
 
-
+def showPlayerStats():
+    clear()
+    print("Let's take a look at you:")
+    print('\n')
+    for i in player.attributes: #   For each string in the list player.attributes...
+        player.displayStat(i)   #   Display that stat
+    print()
+    input("Press enter to continue...")
 
 createWorld()
 playing = True
@@ -83,7 +90,8 @@ while playing and player.alive:
             else:
                 print("No such item.")
                 commandSuccess = False
-
+        elif commandWords[0].lower() == "me":
+            showPlayerStats()
         elif commandWords[0].lower() == "inventory":
             player.showInventory()
         elif commandWords[0].lower() == "help":
