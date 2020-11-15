@@ -2,16 +2,15 @@ from room import Room
 from player import Player
 from item import Item
 from monster import Monster
+from gametime import GameTime
 import os
 import updater
 
 player = Player()
+gT = GameTime()
 
 def createWorld():
-    # a = Room("You are in room 1")
-    # b = Room("You are in room 2")
-    # c = Room("You are in room 3")
-    # d = Room("You are in room 4")
+
     #House Rooms:
     br = Room("Your Bedroom")
     lr = Room("Your Living Room")
@@ -43,11 +42,54 @@ def createWorld():
     player.location = br
     #Monster("Bob the monster", 20, b)
 
+def header():
+    title = "Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)"
+    date = gT.formattedDate()
+    wDim = os.get_terminal_size()[0]
+
+    iterant = 0
+    line1, line2, line3, output = "", "", "", ""
+    # for i in range(wDim):
+    #     if i < len(date):
+    #         line1 += date[i]
+    #     elif i < wDim - len(title):
+    #         line1 += " "
+    #     elif i >= wDim - len(title):
+    #         line1 += title[i - (wDim - len(title))]
+    for i in range(wDim):   #   For loop to make a line of text the width of the terminal with the title centered in the middle
+        if i < (wDim // 2) - (len(title)//2) or i >= (wDim // 2) + (len(title)//2):
+            line1 += " "
+        elif i >= (wDim // 2) - (len(title)//2):
+            line1 += title[i - (wDim // 2) - (len(title)//2)]
+
+    for i in range(wDim):   #   For loop that makes a line of text
+        if (i) < len(date) + 2 and i > 1:
+            line2 += date[i - 2]
+        elif i > len(date) + 2:
+            line2 += "𖡻"
+        else:
+            line2 += " "
+    for i in range(wDim):
+        line3 += "𝍅"
+
+    for i in range(3):
+        if i == 0:
+            output += line1
+        elif i == 1:
+            output += line2
+        elif i == 2:
+            output += line3
+        output += "\n"
+
+    return output
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
 def printSituation():
     clear()
+    print(header())
+
     print(player.location.desc)
     print()
     if player.location.hasMonsters():
@@ -81,6 +123,8 @@ def showPlayerStats():
         player.displayStat(i)   #   Display that stat
     print()
     input("Press enter to continue...")
+
+
 
 createWorld()
 playing = True
