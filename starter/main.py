@@ -8,18 +8,38 @@ import updater
 player = Player()
 
 def createWorld():
-    a = Room("You are in room 1")
-    b = Room("You are in room 2")
-    c = Room("You are in room 3")
-    d = Room("You are in room 4")
-    Room.connectRooms(a, "east", b, "west")
-    Room.connectRooms(c, "east", d, "west")
-    Room.connectRooms(a, "north", c, "south")
-    Room.connectRooms(b, "north", d, "south")
-    i = Item("Rock", "This is just a rock.")
-    i.putInRoom(b)
-    player.location = a
-    Monster("Bob the monster", 20, b)
+    # a = Room("You are in room 1")
+    # b = Room("You are in room 2")
+    # c = Room("You are in room 3")
+    # d = Room("You are in room 4")
+    #House Rooms:
+    br = Room("Your Bedroom.")
+    lr = Room("Your Living Room.")
+    #bY = Room("Your Backyard. It contains a modest g is 6x2 feet large. ")
+    bY = Room("Your Backyard.")
+    #External Rooms:
+    outside         = Room("Outside")   #   Generic 'outside' location, to tie together all of the colony's accessable location
+    farmersMarket   = Room("The farmer's market")
+    gardenSupply    = Room("'Gardener's Delight' Garden Supply Emporium")
+    fieldOffice     = Room("Wasteland Field Office")
+
+
+    Room.connectRooms(br, "living room",  lr, "bedroom")
+    Room.connectRooms(lr, "backyard", bY, "living room")
+    Room.connectRooms(lr, "outside", outside, "inside")
+
+    Room.connectRooms(outside, "farmers market", farmersMarket, "home")
+    Room.connectRooms(outside, "garden supply", gardenSupply, "home")
+    Room.connectRooms(outside, "field office", fieldOffice, "home")
+
+    # Room.connectRooms(a, "east", b, "west")
+    # Room.connectRooms(c, "east", d, "west")
+    # Room.connectRooms(a, "north", c, "south")
+    # Room.connectRooms(b, "north", d, "south")
+    #i = Item("Rock", "This is just a rock.")
+    #i.putInRoom(b)
+    player.location = br
+    #Monster("Bob the monster", 20, b)
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -38,7 +58,7 @@ def printSituation():
         for i in player.location.items:
             print(i.name)
         print()
-    print("You can go in the following directions:")
+    print("You can go to the following locations:")
     for e in player.location.exitNames():
         print(e)
     print()
@@ -70,9 +90,11 @@ while playing and player.alive:
         commandSuccess = True
         command = input("What now? ")
         commandWords = command.split()
-        if commandWords[0].lower() == "go":   #cannot handle multi-word directions
-            player.goDirection(commandWords[1])
+
+        if commandWords[0].lower() == "go":   #CAN handle multi-word directions now that we're using goDirection on the sliced input string
+            player.goDirection(command[3:])
             timePasses = True
+
         elif commandWords[0].lower() == "pickup":  #can handle multi-word objects
             targetName = command[7:]
             target = player.location.getItemByName(targetName)
