@@ -1,5 +1,6 @@
 import os
 
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -9,10 +10,12 @@ class Player:
         self.items = []
         self.health = 50
         self.alive = True
-        self.currency = 0
+        self.currency = 100
         self.attributes = ["self.health", "self.currency"]     #   For use in displaying current status ("me" command)
+
     def goDirection(self, direction):
         self.location = self.location.getDestination(direction)
+
     def pickup(self, item):
         self.items.append(item)
         item.loc = self
@@ -73,3 +76,17 @@ class Player:
             self.alive = False
         print()
         input("Press enter to continue...")
+
+    def buy(self, purchaseTarget):
+        cost = purchaseTarget.value
+        if self.currency >= cost:
+            self.currency -= cost
+            self.items.append(purchaseTarget)
+            purchaseTarget.loc = self
+            print("your new balance is ", self.currency)
+            input("Press enter to continue...")
+        else:
+            clear()
+            print("You don't have enough currency :/")
+            input("Press enter to continue...")
+            return False

@@ -2,7 +2,10 @@ from room import Room
 from player import Player
 from item import Item
 from monster import Monster
+
 from gametime import GameTime
+import events
+
 import os
 import updater
 
@@ -20,6 +23,9 @@ def createWorld():
     outside         = Room("Outside")   #   Generic 'outside' location, to tie together all of the colony's accessable location
     farmersMarket   = Room("The farmer's market")
     gardenSupply    = Room("'Gardener's Delight' Garden Supply Emporium")
+    gardenSupply.roomEventTitles = ["vendor"]   #   We can buy stuff in the garden supply
+    gardenSupply.roomEvents = [events.gardenSupplyVendor]
+
     fieldOffice     = Room("Wasteland Field Office")
 
 
@@ -31,15 +37,12 @@ def createWorld():
     Room.connectRooms(outside, "garden supply", gardenSupply, "home")
     Room.connectRooms(outside, "field office", fieldOffice, "home")
 
-    i = Item("Macbook", "This is your 3019 16-Inch Macbook Vro.")
+    i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
     i.putInRoom(br)
-    # Room.connectRooms(a, "east", b, "west")
-    # Room.connectRooms(c, "east", d, "west")
-    # Room.connectRooms(a, "north", c, "south")
-    # Room.connectRooms(b, "north", d, "south")
+
     #i = Item("Rock", "This is just a rock.")
     #i.putInRoom(b)
-    player.location = br
+    player.location = gardenSupply
     #Monster("Bob the monster", 20, b)
 
 def header():
@@ -77,6 +80,29 @@ def header():
 
     return output
 
+def vendor(event):
+    clear()
+    print(header())
+    print(event.greeting)
+    print(visualizeContainer(len(event.greeting), "down"))
+
+    for i in event.vendorItems:
+        print(i.name,", '" ,i.desc,"' - price: ", i.value)
+
+    print(visualizeContainer(len(event.greeting), "up"))
+
+    commandSuccess = False
+    while not commandSuccess:
+        commandSuccess = True
+        command = input("What would you like to do? ")
+        commandWords = command.split()
+
+        if commandWords[0].lower() == "buy":
+
+            if event.vendorHasItem(command[4:]):
+                item = event.getVendorItemByName(command[4:])
+                player.buy(item)
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -97,9 +123,14 @@ def printSituation():
         for i in player.location.items:
             print(i.name)
         print()
-    print("You can go to the following locations:")
+    print("You can do the following things in this room:")
     for e in player.location.exitNames():
         print(e)
+
+    if player.location.hasEvents():
+        print("You can do the following interactions:")
+        for i in player.location.roomEventTitles:
+            print(i)
     print()
 
 def showHelp():
@@ -143,6 +174,7 @@ while playing and player.alive:
     printSituation()
     commandSuccess = False
     timePasses = False
+
     while not commandSuccess:
         commandSuccess = True
         command = input("What now? ")
@@ -191,6 +223,11 @@ while playing and player.alive:
             else:
                 print("No such monster.")
                 commandSuccess = False
+
+        elif commandWords[0].lower() == "vendor":
+            for i in range(len(player.location.roomEventTitles)):
+                if player.location.roomEventTitles[i] == "vendor":
+                    vendor(player.location.roomEvents[i])
         else:
             print("Not a valid command")
             commandSuccess = False

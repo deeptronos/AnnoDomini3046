@@ -6,6 +6,7 @@ class Room:
         self.monsters = []
         self.exits = []
         self.items = []
+        self.roomEventTitles = None
     def addExit(self, exitName, destination):
         self.exits.append([exitName, destination])
     def getDestination(self, direction):
@@ -42,3 +43,5 @@ class Room:
         return False
     def randomNeighbor(self):
         return random.choice(self.exits)[1]
+    def hasEvents(self):
+        return self.roomEventTitles != None
