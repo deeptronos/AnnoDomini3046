@@ -1,4 +1,5 @@
 import random
+from gametime import GameTime
 from item import Item
 
 class Event:
@@ -26,6 +27,13 @@ class VendorEvent(Event):
             if i.name.lower() == itemName:
                 return i
 
+class SleepEvent(Event):
+    def __init__(self, gameTimeObject):
+        super().__init__()
+        self.gameTimeObject = gameTimeObject
+
+    def sleep(self):
+        self.gameTimeObject.advanceDate()
 
 gardenSupplyVendor = VendorEvent()
 gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]

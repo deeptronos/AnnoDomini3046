@@ -1,6 +1,6 @@
 from room import Room
 from player import Player
-from item import Item
+from item import Item, HealingItem
 from monster import Monster
 
 from gametime import GameTime
@@ -14,11 +14,17 @@ gT = GameTime()
 
 def createWorld():
 
+    bedtime = events.SleepEvent(gT) #   Initializing this here, not in events.py, because we need to refer to gT
+
     #House Rooms:
     br = Room("Your Bedroom")
     lr = Room("Your Living Room")
     #bY = Room("Your Backyard. It contains a modest g is 6x2 feet large. ")
     bY = Room("Your Backyard")
+    bed = Room("In Your Bed")
+    bed.roomEventTitles = ["sleep"]
+    bed.roomEvents = [bedtime]
+
     #External Rooms:
     outside         = Room("Outside")   #   Generic 'outside' location, to tie together all of the colony's accessable location
     farmersMarket   = Room("The farmer's market")
@@ -30,6 +36,7 @@ def createWorld():
 
 
     Room.connectRooms(br, "living room",  lr, "bedroom")
+    Room.connectRooms(br, "to bed", bed, "out of bed") #   Bed is a "room" that advances the day when you enter it
     Room.connectRooms(lr, "backyard", bY, "living room")
     Room.connectRooms(lr, "outside", outside, "inside")
 
@@ -39,10 +46,13 @@ def createWorld():
 
     i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
     i.putInRoom(br)
+    h = HealingItem("Juicebox", "a bit of juice always helps")
+    h.healthRestore = 100
+    h.putInRoom(lr)
 
     #i = Item("Rock", "This is just a rock.")
     #i.putInRoom(b)
-    player.location = gardenSupply
+    player.location = br
     #Monster("Bob the monster", 20, b)
 
 def header():
@@ -228,8 +238,33 @@ while playing and player.alive:
             for i in range(len(player.location.roomEventTitles)):
                 if player.location.roomEventTitles[i] == "vendor":
                     vendor(player.location.roomEvents[i])
+
+        elif commandWords[0].lower() == "sleep":
+            for i in range(len(player.location.roomEventTitles)):
+                if player.location.roomEventTitles[i] == "sleep":
+                    player.bedtime()
+                    player.location.roomEvents[i].sleep()
+                    clear()
+                    print(header())
+                    print("Good morning! It's ", gT.formattedDate(), sep="")
+                    input("Press enter to continue...")
+                    updater.updateAll()
+
+        elif commandWords[0].lower() == "heal":
+            targetName = command[5:]
+            target = player.getInventoryItemByName(targetName)
+            if target != False: #   If getInventoryItemByName doesn't return false...
+                target.heal(player)
+            else:
+                print("No such item.")
+                commandSuccess = False
+
+        elif commandWords[0].lower() == "wait":
+            timePasses = True
+
         else:
             print("Not a valid command")
             commandSuccess = False
+
     if timePasses == True:
         updater.updateAll()

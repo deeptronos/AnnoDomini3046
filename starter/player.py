@@ -11,7 +11,9 @@ class Player:
         self.health = 50
         self.alive = True
         self.currency = 100
-        self.attributes = ["self.health", "self.currency"]     #   For use in displaying current status ("me" command)
+        self.dailyPoints = 10
+        self.dailyPointsLimit = 10
+        self.attributes = ["self.health", "self.currency", "self.dailyPoints"]     #   For use in displaying current status ("me" command)
 
     def goDirection(self, direction):
         self.location = self.location.getDestination(direction)
@@ -90,3 +92,6 @@ class Player:
             print("You don't have enough currency :/")
             input("Press enter to continue...")
             return False
+
+    def bedtime(self):
+        self.dailyPoints = self.dailyPointsLimit #  Refresh daily points for a new days

@@ -10,11 +10,12 @@ class GameTime:
         self.year = 0
 
     def advanceDate(self):
-        dayCounter += 1
+        self.dayCounter += 1
         if self.currentDate < 45:
             self.currentDate += 1
         else:
-            self.currentDate == 0
+            self.currentDate = 1
+            self.dayCounter = 0
             self.changeSeason()
 
         if self.dayCounter == 90:
