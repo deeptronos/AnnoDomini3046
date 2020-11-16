@@ -148,6 +148,13 @@ def showHelp():
     print("go <direction> -- moves you in the given direction")
     print("inventory -- opens your inventory")
     print("pickup <item> -- picks up the item")
+    print("drop <item> -- Drop an item from your inventory")
+    print("sleep -- In areas that contain a sleepable bed of some sort, use this to go to bed")
+    print("vendor -- In areas in which a vendor resides, use this to browse and purchase their wares")
+    print("wait -- Wait a cycle")
+    print("heal <item> -- Uses a healing <item> from your inventory to increase your health. Be mindful - they're often single use.")
+    print("inspect <item> -- Inspect an <item>")
+    print("me -- See the current state of your stats and currency")
     print()
     input("Press enter to continue...")
 
