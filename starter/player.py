@@ -55,11 +55,21 @@ class Player:
         input("Press enter to continue...")
 
     def showInventory(self):
+        inventoryDisplayList, countedItems = [], []
+        for i in self.items:
+            if i not in countedItems:
+                count = str(self.items.count(i))
+                displayStr = i.name
+                displayStr += ( " x" + count)
+                inventoryDisplayList.append(displayStr)
+                
+                countedItems.append(i)
+                
         clear()
         print("You are currently carrying:")
         print()
-        for i in self.items:
-            print(i.name)
+        for i in inventoryDisplayList:
+            print(i)
         print()
         input("Press enter to continue...")
     def attackMonster(self, mon):

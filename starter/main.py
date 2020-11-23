@@ -45,7 +45,8 @@ def createWorld():
     Room.connectRooms(outside, "field office", fieldOffice, "home")
 
     i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
-    i.putInRoom(br)
+   
+   
     h = HealingItem("Juicebox", "a bit of juice always helps")
     h.healthRestore = 100
     h.putInRoom(lr)
@@ -53,6 +54,8 @@ def createWorld():
     #i = Item("Rock", "This is just a rock.")
     #i.putInRoom(b)
     player.location = br
+    i.putInRoom(br), i.putInRoom(br)
+    player.pickup(i), player.pickup(i)    #Pickup two macbooks
     #Monster("Bob the monster", 20, b)
 
 def header():
