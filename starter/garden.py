@@ -25,11 +25,7 @@ class Garden:
 		returnStr += str(self.dirtW_Amnt) + "x" + str(self.dirtH_Amnt) + " of growing space, for a total of " + str(self.dirtAmnt) + " plots.\n"
 		returnStr += "It currently looks like this: \n"
 		returnStr += self.visualizeGarden()
-		for i in self.dirtPlots:
-			if i.growing != None:
-				returnStr += str(i.growing.name) + "\n"
-			else:
-				returnStr += str(i.growing) + "\n"
+
 		return returnStr
 		
 	def visualizeGarden(self):	#	returns a string that contains an intuitive text-based "visualization" of the garden
@@ -65,12 +61,9 @@ class Garden:
 	def plantFromSeed(self, seedObject):
 		plant = seedObject.becomePlant()
 		for i in range(len(self.dirtPlots)):
-			clear()
-			print("jajaja")
 			if self.dirtPlots[i].growing == None:
 				self.dirtPlots[i].growing = plant
 				break
-			input()
 		
 class dirtPlot:
 	def __init__(self):
