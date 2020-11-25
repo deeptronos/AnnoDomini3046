@@ -39,3 +39,5 @@ class HealingItem(Item):
             target.health += self.healthRestore
             target.items.remove(self)
             self.loc = None
+            
+

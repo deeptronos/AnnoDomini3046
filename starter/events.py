@@ -1,6 +1,7 @@
 import random
 from gametime import GameTime
 from item import Item
+from garden import Garden
 
 class Event:
     def __init__(self):
@@ -35,8 +36,19 @@ class SleepEvent(Event):
     def sleep(self):
         self.gameTimeObject.advanceDate()
 
+class GardenEvent(Event):
+    def __init__(self, eventGarden):
+            super().__init__()
+            self.eventGarden = eventGarden
+    def hasSeedInInventory(self, subject, seed):
+        if subject.getInventoryItemByName(seed):
+            return True
+        return False
+
 gardenSupplyVendor = VendorEvent()
 gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]
 gardenSupplyVendor.greeting = "Welcome to Gardener's Delight! I'm Gardener, and I would be delighted to sell you some gardening supplies!"
 gardenSupplyVendor.goodbye = "Come back soon!"
 #gardenSupplyVendor.purchaseMessage = "Enjoy it!"
+
+

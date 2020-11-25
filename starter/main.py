@@ -3,6 +3,8 @@ from player import Player
 from item import Item, HealingItem
 from monster import Monster
 
+from plant import Plant, Seed
+from garden import Garden
 from gametime import GameTime
 import events
 
@@ -11,6 +13,8 @@ import updater
 
 player = Player()
 gT = GameTime()
+
+#    TODO: Make plants grow, require watering, be harvestable
 
 def createWorld():
 
@@ -21,6 +25,12 @@ def createWorld():
     lr = Room("Your Living Room")
     #bY = Room("Your Backyard. It contains a modest g is 6x2 feet large. ")
     bY = Room("Your Backyard")
+    g = Garden(6, 2)
+    g.putInRoom(bY)
+    defaultBackyardGardenEvent = events.GardenEvent(g)
+    bY.roomEventTitles = ["garden"]
+    bY.roomEvents = [defaultBackyardGardenEvent]
+   
     bed = Room("In Your Bed")
     bed.roomEventTitles = ["sleep"]
     bed.roomEvents = [bedtime]
@@ -51,11 +61,15 @@ def createWorld():
     h.healthRestore = 100
     h.putInRoom(lr)
 
+    tS = Seed("Lavender seed", "Seeds that grow into a beautiful lavender plant", 1, 15, 5, 50, 0, 25, 50)    #    test Seed
+    tS.putInRoom(bY)
+    
     #i = Item("Rock", "This is just a rock.")
     #i.putInRoom(b)
-    player.location = br
+    player.location = bY
     i.putInRoom(br), i.putInRoom(br)
-    player.pickup(i), player.pickup(i)    #Pickup two macbooks
+    player.pickup(tS)
+   # player.pickup(i), player.pickup(i)    #Pickup two macbooks
     #Monster("Bob the monster", 20, b)
 
 def header():
@@ -111,10 +125,27 @@ def vendor(event):
         commandWords = command.split()
 
         if commandWords[0].lower() == "buy":
-
             if event.vendorHasItem(command[4:]):
                 item = event.getVendorItemByName(command[4:])
                 player.buy(item)
+
+def accessGarden(event):
+    clear()
+    print(header())
+    print(event.eventGarden.returnInfoString())
+    
+    commandSuccess = False
+    while not commandSuccess:
+        commandSuccess = True
+        command = input("What would you like to do? ")
+        commandWords = command.split()
+        
+        if commandWords[0].lower() == "plant":
+            if event.hasSeedInInventory(player, command[6:]):
+                seed = player.prepareSeedForPlanting(command[6:])
+                event.eventGarden.plantFromSeed(seed)
+    input("Press enter to continue...")
+
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -271,7 +302,11 @@ while playing and player.alive:
 
         elif commandWords[0].lower() == "wait":
             timePasses = True
-
+            
+        elif commandWords[0].lower() == "garden":
+            for i in range(len(player.location.roomEventTitles)):
+                if player.location.roomEventTitles[i] == "garden":
+                    accessGarden(player.location.roomEvents[i])
         else:
             print("Not a valid command")
             commandSuccess = False

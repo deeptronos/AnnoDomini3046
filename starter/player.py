@@ -62,9 +62,7 @@ class Player:
                 displayStr = i.name
                 displayStr += ( " x" + count)
                 inventoryDisplayList.append(displayStr)
-                
                 countedItems.append(i)
-                
         clear()
         print("You are currently carrying:")
         print()
@@ -72,6 +70,7 @@ class Player:
             print(i)
         print()
         input("Press enter to continue...")
+        
     def attackMonster(self, mon):
         clear()
         print("You are attacking " + mon.name)
@@ -99,9 +98,15 @@ class Player:
             input("Press enter to continue...")
         else:
             clear()
-            print("You don't have enough currency :/")
+            print("You don't have enough currency :<")
             input("Press enter to continue...")
             return False
-
+            
+    def prepareSeedForPlanting(self, seedName):
+        seed = self.getInventoryItemByName(seedName)
+        self.items.remove(seed)
+        seed.loc = None
+        return seed
+        
     def bedtime(self):
-        self.dailyPoints = self.dailyPointsLimit #  Refresh daily points for a new days
+        self.dailyPoints = self.dailyPointsLimit #  Refresh daily points for a new day
