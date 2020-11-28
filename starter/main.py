@@ -1,6 +1,6 @@
 from room import Room
 from player import Player
-from item import Item, HealingItem
+from item import Item, HealingItem, DirtPlotEffector
 from monster import Monster
 
 from plant import Plant, Seed
@@ -64,12 +64,15 @@ def createWorld():
     tS = Seed("Lavender seed", "Seeds that grow into a beautiful lavender plant", 1, 15, 5, 25, 2)    #    test Seed
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
     tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
-    
+    tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer
+
+    tF.effect="fertilized"
+    tF.putInRoom(bY)
     #i = Item("Rock", "This is just a rock.")
     #i.putInRoom(b)
     player.location = bY
     i.putInRoom(br), i.putInRoom(br)
-    player.pickup(tS),player.pickup(tS),player.pickup(tS)
+    player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
    # player.pickup(i), player.pickup(i)    #Pickup two macbooks
     #Monster("Bob the monster", 20, b)
 
@@ -131,21 +134,58 @@ def vendor(event):
                 player.buy(item)
 
 def accessGarden(event):
-    clear()
-    print(header())
-    print(event.eventGarden.returnInfoString())
-    
-    commandSuccess = False
-    while not commandSuccess:
-        commandSuccess = True
-        command = input("What would you like to do? ")
-        commandWords = command.split()
-        
-        if commandWords[0].lower() == "plant":
+   #while playing and player.alive:
+      clear()
+      print(header())
+      print(event.eventGarden.returnGardenInfoString())
+       
+      commandSuccess = False
+      while not commandSuccess:
+         commandSuccess = True
+         command = input("What would you like to do? ")
+         commandWords = command.split()
+           
+         if commandWords[0].lower() == "plant":
             if event.hasSeedInInventory(player, command[6:]):
-                seed = player.prepareSeedForPlanting(command[6:])
-                event.eventGarden.plantFromSeed(seed)
-    input("Press enter to continue...")
+               seed = player.prepareSeedForPlanting(command[6:])
+               event.eventGarden.plantFromSeed(seed)
+               
+         elif commandWords[0].lower() == "fertilize":   #   command is "fertilize ###" to fertilize a specific plot
+            plotTargetNumber= command[10:]
+            plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
+            if plot:
+               fertilized = event.eventGarden.fertilizePlot(player, plot)
+               #if fertilized:
+               if not fertilized:
+                  clear()
+                  print(header())
+                  print("You don't have any fertilizer!")
+                  input("Press enter to continue...")
+                  
+         elif commandWords[0].lower() == "check":   #   command is "check ###" to check a specific plot
+            plotTargetNumber= command[6:]
+            plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
+            if plot:
+               plotInfo = event.eventGarden.returnPlotInfo(plot)
+               if plotInfo[1] != []:
+                  plotEffects = ", "
+                  plotEffects = plotEffects.join(plotInfo[1])   #   Make the statusEffects on the plot, stored in plotInfo[1], into a string formatted for display to the player
+               else:
+                  plotEffects = "Nothing"
+               
+               displayStr = "Plot #" + plotTargetNumber +": \n"
+               displayStr += "   Growing " + str(plotInfo[0]) + ".\n"
+               displayStr += "   Current effects: " + plotEffects + ".\n"
+            
+               clear()
+               print(header())
+               print(displayStr)
+               input("Press enter to continue...")
+         
+         elif commandWords[0].lower() == "back":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
+            #   Basically, I'm wondering how to do what the input prompt is doing (returning us to the main loop) without actually making the code use an input()?
+            #input("Press enter to continue...")
+            break   #   Is this the best practice?
 
 
 def clear():

@@ -40,4 +40,8 @@ class HealingItem(Item):
             target.items.remove(self)
             self.loc = None
             
-
+class DirtPlotEffector(Item):
+    def __init__(self, name, desc, value=None):
+        super().__init__(name, desc, value)
+        self.effect = ""
+  

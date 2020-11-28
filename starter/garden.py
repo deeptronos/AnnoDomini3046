@@ -18,7 +18,15 @@ class Garden:
 		self.loc = room
 		room.addInteractable(self)
 		
-	def returnInfoString(self):	#	Returns a string of info about the garden, formatted for display to the player
+	def getPlotByNumber(self, plotNumStrInput):
+		plotNum = int(plotNumStrInput)	#	Convert player input, captured as a string, to an integer
+		for i in range(len(self.dirtPlots)):
+			if i == plotNum:
+				return self.dirtPlots[i]
+				
+		return False
+	
+	def returnGardenInfoString(self):	#	Returns a string of info about the garden, formatted for display to the player
 		growingList = []
 		returnStr = ""
 		returnStr += self.name + ":\n"
@@ -67,6 +75,22 @@ class Garden:
 			if self.dirtPlots[i].growing == None:
 				self.dirtPlots[i].growing = plant
 				break
+	def fertilizePlot(self, callingEntity, plot):
+		fertilizer = callingEntity.getInventoryItemByName("fertilizer")
+		if fertilizer:
+			plot.statusEffects.append(fertilizer.effect)
+			callingEntity.items.remove(fertilizer)
+			fertilizer.loc = None
+			return True
+		else:
+			return False
+			
+		
+	def returnPlotInfo(self, plot):
+		if plot.growing != None:	#	If there's a plant, with a name, in plot.growing...
+			return[plot.growing.name, plot.statusEffects]
+		else:	#	If not (ie, plot.growing is None)...
+			return[plot.growing, plot.statusEffects]
 		
 class dirtPlot:
 	def __init__(self):
