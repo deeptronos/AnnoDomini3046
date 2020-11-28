@@ -8,7 +8,6 @@ def clamp(n, minN, maxN):
 def mapRange(n, inMaxN, rangeMaxN):	#	Maps n (a number between 0 and inMaxN) to a number between 0 and rangeMaxN
 	return (n / float(inMaxN) * rangeMaxN)
 
-
 class Seed(Item):
 	def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
 		super().__init__(name, desc, value)
@@ -45,12 +44,14 @@ class Plant:
 		self.fullyGrown = False
 		self.fertilized = False	#	Makes growth duration lower if the soil it's planted in is fertilized
 		self.waterable, self.wateredToday = True, False
-		self.luck = random.randint(1, 10) * self.radiation	#	Future: Maybe make min of luck variable? Add leveling system for player which includes increasing the min of a plant's possible luck?
+		self.luck = random.randint(1, 10) * self.radiation	#	Future: Maybe make min of luck a variable? Add leveling system for player which includes increasing the min of a plant's possible luck?
 			#	Max: 10 * 10 = 100
 			#	Min: 1 * 1 = 1
 		self.luck = round(mapRange(self.luck, 100, 10))	#	Map self.luck from a number between 0 and 100 to a number between 0 and 10
 		
-	#def update(self):
+	def update(self):	#	Happens at the end of every day
+		calculateGrade()
+		grow()
 		
 	def calculateGrade(self):
 		self.love = self.daysWatered * (self.daysWatered / self.age)	#	Calculate love based player's care of plant

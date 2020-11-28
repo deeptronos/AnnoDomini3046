@@ -9,7 +9,7 @@ class Garden:
 		self.name = name
 		self.loc = None
 		self.dirtW_Amnt, self.dirtH_Amnt = dirtW_Amnt, dirtH_Amnt
-		self.dirtAmnt = self.dirtW_Amnt * self.dirtH_Amnt
+		self.dirtAmnt= self.dirtW_Amnt * self.dirtH_Amnt
 		self.dirtPlots = []
 		for i in range(self.dirtAmnt):
 			self.dirtPlots.append(dirtPlot())
@@ -36,25 +36,28 @@ class Garden:
 			else:
 				plants.append(str(i.growing))
 		plants.sort(reverse=True, key=(lambda x:len(x)))
-		textMaxW = len(plants[0])	#	Get longest plant-name
+		textMaxW = len("Plot ####: ") + len(plants[0])	#	Get sum of plant name display prefix and the longest plant-name to get the max width of text in a box
 		
 		returnStr = ""
 		returnStr += ("-" * ((textMaxW + 2) * self.dirtW_Amnt)) + "\n"
-		for h in range(self.dirtH_Amnt):
-			for w in range(self.dirtW_Amnt):
-				returnStr += "┊"
-				if self.dirtPlots[w+h].growing != None:
-					plantTitle = str(self.dirtPlots[w+h].growing.name)
-				else:
-					plantTitle = str(self.dirtPlots[w+h].growing)
-					
-				while len(plantTitle) < textMaxW:
-					plantTitle += " "
-				returnStr += plantTitle
-				returnStr += "┊"
+		
+		for i in range(len(self.dirtPlots)):	#	Loop through each dirt plot
+			returnStr += "┊"
+			
+			plantTitle = "Plot #" + str(i + 1) + ": "
+			if self.dirtPlots[i].growing != None:
+				plantTitle += str(self.dirtPlots[i].growing.name)
+			else:
+				plantTitle += str(self.dirtPlots[i].growing)
 				
-			returnStr += "\n"
-			returnStr += ("-" * ((textMaxW + 2) * self.dirtW_Amnt)) + "\n"
+			while len(plantTitle) < textMaxW:
+				plantTitle += " "
+			returnStr += plantTitle
+			returnStr += "┊"
+			
+			if (i + 1) % self.dirtW_Amnt == 0:	#	If we reach the "end" of a "horizontal row" of the garden, add a newline and a divider bar
+				returnStr += "\n"
+				returnStr += ("-" * ((textMaxW + 2) * self.dirtW_Amnt)) + "\n"
 			
 		return returnStr
 		
