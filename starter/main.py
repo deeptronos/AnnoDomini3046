@@ -61,7 +61,8 @@ def createWorld():
     h.healthRestore = 100
     h.putInRoom(lr)
 
-    tS = Seed("Lavender seed", "Seeds that grow into a beautiful lavender plant", 1, 15, 5, 50, 0, 25, 50)    #    test Seed
+    tS = Seed("Lavender seed", "Seeds that grow into a beautiful lavender plant", 1, 15, 5, 25, 2)    #    test Seed
+       #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
     tS.putInRoom(bY)
     
     #i = Item("Rock", "This is just a rock.")
