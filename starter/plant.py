@@ -17,16 +17,16 @@ class Seed(Item):	#	Making a seed item
 		self.radiation = radiation 
 		self.exotic = exotic
 		self.plantPrice = plantPrice	#	The price of the fully-grown plant
+		
 	def becomePlant(self):
-
 		def nameProcess(seedName):	#	Turn the seed's name in to a proper plant name (just by removing the "seed" at the end of the seed's name)
 			split = seedName.split()
 			split.pop(len(split) - 1)
 			returnStr = ""
 			for i in split:
-				# returnStr += i.capitalize() + " "
-				returnStr += i + " "
+				returnStr += i.capitalize() + " "
 			return returnStr
+			
 		plantName = nameProcess(self.name)
 		
 		plant = Plant(plantName, self.growthDuration, self.price, self.plantPrice, self.radiation, self.exotic)

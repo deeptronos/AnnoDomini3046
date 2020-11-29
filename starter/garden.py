@@ -104,7 +104,6 @@ class Garden:
 			return True
 		return False
 		
-		
 	def returnPlotInfo(self, plot):
 		if plot.growing != None:	#	If there's a plant, with a name, in plot.growing...
 			return[plot.growing.name, plot.growing.age, plot.statusEffects]

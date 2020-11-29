@@ -14,7 +14,7 @@ import updater
 player = Player()
 gT = GameTime()
 
-#    TODO: Make plants grow, require watering, be harvestable
+#    TODO: make plants be harvestable
 
 def createWorld():
 
@@ -158,7 +158,6 @@ def accessGarden(event):
             plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
             if plot:
                fertilized = event.eventGarden.fertilizePlot(player, plot)
-               #if fertilized:
                if not fertilized:
                   clear()
                   print(header())
@@ -172,12 +171,8 @@ def accessGarden(event):
             if plot:
                plotInfo = event.eventGarden.returnPlotInfo(plot)
                if plotInfo[2] != []:
-                  
-                 # if len(plotInfo[2]) > 1:
                   plotEffects = ", "
                   plotEffects = plotEffects.join(plotInfo[2])   #   Make the statusEffects on the plot, stored in plotInfo[1], into a string formatted for display to the player
-                 # else:
-                 #    plotEffects = 
                else:
                   plotEffects = "Nothing"
                
@@ -315,7 +310,6 @@ while playing and player.alive:
         elif commandWords[0].lower() == "inspect":
             targetName = command[8:]
             player.inspectItem(targetName)
-            #print("target: ", target)
 
         elif commandWords[0].lower() == "me":
             showPlayerStats()

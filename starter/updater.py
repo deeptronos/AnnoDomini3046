@@ -3,9 +3,7 @@ dailyUpdates = []    #    Separate list of updates that only occur when an in-ga
 
 def updateAll():
     for u in updates:
-       # print("UPDATE")
         u.update()
-    #input("Press enter to continue...")
 
 def register(thing):
     updates.append(thing)
