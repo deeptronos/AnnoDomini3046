@@ -1,4 +1,5 @@
 import os
+import updater
 
 def clear():
 	os.system('cls' if os.name == 'nt' else 'clear')
@@ -14,6 +15,14 @@ class Garden:
 		for i in range(self.dirtAmnt):
 			self.dirtPlots.append(dirtPlot())
 			
+		updater.dailyUpdateRegister(self)
+	
+	def dailyUpdate(self):
+		for i in self.dirtPlots:
+				
+			if "watered" in i.statusEffects:	#	"watered" has a duration of 1 day, and is basically just a status to tell the player whether they've watered that plant today
+				i.statusEffects.remove("watered")
+		
 	def putInRoom(self, room):
 		self.loc = room
 		room.addInteractable(self)
@@ -44,7 +53,7 @@ class Garden:
 			else:
 				plants.append(str(i.growing))
 		plants.sort(reverse=True, key=(lambda x:len(x)))
-		textMaxW = len("Plot ####: ") + len(plants[0])	#	Get sum of plant name display prefix and the longest plant-name to get the max width of text in a box
+		textMaxW = len("Plot ####: ") + len(plants[0]) + len(" (W)")	#	Get sum of plant name display prefix and the longest plant-name to get the max width of text in a box
 		
 		returnStr = ""
 		returnStr += ("-" * ((textMaxW + 2) * self.dirtW_Amnt)) + "\n"
@@ -55,6 +64,8 @@ class Garden:
 			plantTitle = "Plot #" + str(i + 1) + ": "
 			if self.dirtPlots[i].growing != None:
 				plantTitle += str(self.dirtPlots[i].growing.name)
+				if self.dirtPlots[i].growing.wateredToday:
+					plantTitle += " (W)"
 			else:
 				plantTitle += str(self.dirtPlots[i].growing)
 				
@@ -75,6 +86,7 @@ class Garden:
 			if self.dirtPlots[i].growing == None:
 				self.dirtPlots[i].growing = plant
 				break
+				
 	def fertilizePlot(self, callingEntity, plot):
 		fertilizer = callingEntity.getInventoryItemByName("fertilizer")
 		if fertilizer:
@@ -85,6 +97,14 @@ class Garden:
 		else:
 			return False
 			
+	def waterPlot(self, plot):
+		plot.statusEffects.append("watered")
+		if plot.growing != None:
+			plot.growing.watered()
+			return True
+		return False
+		
+		
 	def returnPlotInfo(self, plot):
 		if plot.growing != None:	#	If there's a plant, with a name, in plot.growing...
 			return[plot.growing.name, plot.growing.age, plot.statusEffects]

@@ -50,6 +50,8 @@ def createWorld():
     Room.connectRooms(lr, "backyard", bY, "living room")
     Room.connectRooms(lr, "outside", outside, "inside")
 
+    Room.connectRooms(bed, "backyard", bY, "bed")   #   FOR TESTING
+
     Room.connectRooms(outside, "farmers market", farmersMarket, "home")
     Room.connectRooms(outside, "garden supply", gardenSupply, "home")
     Room.connectRooms(outside, "field office", fieldOffice, "home")
@@ -61,7 +63,8 @@ def createWorld():
     h.healthRestore = 100
     h.putInRoom(lr)
 
-    tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)    #    test Seed
+    tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)    #    test Seed
+   # tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
     tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
     tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer
@@ -169,8 +172,12 @@ def accessGarden(event):
             if plot:
                plotInfo = event.eventGarden.returnPlotInfo(plot)
                if plotInfo[2] != []:
+                  
+                 # if len(plotInfo[2]) > 1:
                   plotEffects = ", "
-                  plotEffects = plotEffects.join(plotInfo[1])   #   Make the statusEffects on the plot, stored in plotInfo[1], into a string formatted for display to the player
+                  plotEffects = plotEffects.join(plotInfo[2])   #   Make the statusEffects on the plot, stored in plotInfo[1], into a string formatted for display to the player
+                 # else:
+                 #    plotEffects = 
                else:
                   plotEffects = "Nothing"
                
@@ -184,6 +191,15 @@ def accessGarden(event):
                print(displayStr)
                input("Press enter to continue...")
          
+         elif commandWords[0].lower() == "water":
+            plotTargetNumber = command[6:]
+            plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "water 1" refer to the first plot, ie, plot 0. Again, a QOL thing.
+            plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
+            
+            watered = event.eventGarden.waterPlot(plot)
+            if not watered:
+               print("There's nothing planted in that plot!")
+               input("Press enter to continue...")
          elif commandWords[0].lower() == "back":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
             #   Basically, I'm wondering how to do what the input prompt is doing (returning us to the main loop) without actually making the code use an input()?
             #input("Press enter to continue...")
@@ -333,6 +349,7 @@ while playing and player.alive:
                     print("Good morning! It's ", gT.formattedDate(), sep="")
                     input("Press enter to continue...")
                     updater.updateAll()
+                    updater.dailyUpdateAll()
 
         elif commandWords[0].lower() == "heal":
             targetName = command[5:]

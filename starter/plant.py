@@ -1,6 +1,7 @@
 import os
 import random
 from item import Item
+import updater
 
 def clamp(n, minN, maxN):
 	return max(min(maxN, n), minN)
@@ -58,9 +59,13 @@ class Plant:
 			#	Min: 1 * 1 = 1
 		self.luck = round(mapRange(self.luck, 100, 10))	#	Map self.luck from a number between 0 and 100 to a number between 0 and 10
 		
-	def update(self):	#	Happens at the end of every day
-		calculateGrade()
-		grow()
+		updater.dailyUpdateRegister(self)
+		
+	def dailyUpdate(self):	#	Happens at the end of every day
+		self.grow()
+		if self.age > 2:	#	Grade only calculates when plant is more than 2 days old
+			self.calculateGrade()
+		self.wateredToday = False
 		
 	def calculateGrade(self):
 		self.love = self.daysWatered * (self.daysWatered / self.age)	#	Calculate love based player's care of plant
@@ -80,10 +85,18 @@ class Plant:
 		self.currentGrade = int(mapRange(self.currentGrade, (100 + self.luck), 4))	#	Map currentGrade from a number, between 0 and the sum of the maximum possible beauty and the plant's luck, to a number (integer) between 0 and 4
 		
 	def grow(self):
+		print("grow()")
+		input("press enter...")
 		if self.watered and not self.fullyGrown:
 			if self.age < self.growthDuration:
 				self.age += 1
 			else:
 				self.fullyGrown = True
-			
+				self.waterable = False
+				
+	def watered(self):
+		if self.waterable and not self.wateredToday:
+			self.daysWatered += 1
+			self.wateredToday = True
+		
 	
