@@ -85,16 +85,16 @@ class Garden:
 		else:
 			return False
 			
-		
 	def returnPlotInfo(self, plot):
 		if plot.growing != None:	#	If there's a plant, with a name, in plot.growing...
-			return[plot.growing.name, plot.statusEffects]
+			return[plot.growing.name, plot.growing.age, plot.statusEffects]
 		else:	#	If not (ie, plot.growing is None)...
-			return[plot.growing, plot.statusEffects]
+			return[plot.growing, plot.growing, plot.statusEffects]
 		
 class dirtPlot:
 	def __init__(self):
 		self.growing = None
 		self.statusEffects = []
+	
 	
 	

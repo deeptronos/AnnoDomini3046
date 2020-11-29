@@ -61,7 +61,7 @@ def createWorld():
     h.healthRestore = 100
     h.putInRoom(lr)
 
-    tS = Seed("Lavender seed", "Seeds that grow into a beautiful lavender plant", 1, 15, 5, 25, 2)    #    test Seed
+    tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)    #    test Seed
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
     tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
     tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer
@@ -163,19 +163,21 @@ def accessGarden(event):
                   input("Press enter to continue...")
                   
          elif commandWords[0].lower() == "check":   #   command is "check ###" to check a specific plot
-            plotTargetNumber= command[6:]
+            plotTargetNumber = command[6:]
+            plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "check 1" refer to the first plot, ie, plot 0. This is a QOL thing to make it intuitive to non-programmers
             plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
             if plot:
                plotInfo = event.eventGarden.returnPlotInfo(plot)
-               if plotInfo[1] != []:
+               if plotInfo[2] != []:
                   plotEffects = ", "
                   plotEffects = plotEffects.join(plotInfo[1])   #   Make the statusEffects on the plot, stored in plotInfo[1], into a string formatted for display to the player
                else:
                   plotEffects = "Nothing"
                
-               displayStr = "Plot #" + plotTargetNumber +": \n"
-               displayStr += "   Growing " + str(plotInfo[0]) + ".\n"
-               displayStr += "   Current effects: " + plotEffects + ".\n"
+               displayStr = "Plot #" + str(int(plotTargetNumber) + 1) +": \n"
+               displayStr += "   Growing " + str(plotInfo[0]) + "\n"
+               displayStr += "   Plant age: " + str(plotInfo[1]) + "\n"
+               displayStr += "   Current effects: " + plotEffects + "\n"
             
                clear()
                print(header())

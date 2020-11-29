@@ -8,7 +8,7 @@ def clamp(n, minN, maxN):
 def mapRange(n, inMaxN, rangeMaxN):	#	Maps n (a number between 0 and inMaxN) to a number between 0 and rangeMaxN
 	return (n / float(inMaxN) * rangeMaxN)
 
-class Seed(Item):
+class Seed(Item):	#	Making a seed item
 	def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
 		super().__init__(name, desc, value)
 		self.growthDuration = growthDuration
@@ -17,9 +17,18 @@ class Seed(Item):
 		self.exotic = exotic
 		self.plantPrice = plantPrice	#	The price of the fully-grown plant
 	def becomePlant(self):
-		# user.items.remove(self)
-		# self.loc = None
-		plant = Plant(self.name, self.growthDuration, self.price, self.plantPrice, self.radiation, self.exotic)
+
+		def nameProcess(seedName):	#	Turn the seed's name in to a proper plant name (just by removing the "seed" at the end of the seed's name)
+			split = seedName.split()
+			split.pop(len(split) - 1)
+			returnStr = ""
+			for i in split:
+				# returnStr += i.capitalize() + " "
+				returnStr += i + " "
+			return returnStr
+		plantName = nameProcess(self.name)
+		
+		plant = Plant(plantName, self.growthDuration, self.price, self.plantPrice, self.radiation, self.exotic)
 		return plant
 
 class Plant:
