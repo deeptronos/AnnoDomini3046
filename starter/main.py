@@ -3,7 +3,7 @@ from player import Player
 from item import Item, HealingItem, DirtPlotEffector
 from monster import Monster
 
-from plant import Plant, Seed
+from plant import Plant, Seed, CompletedPlant
 from garden import Garden
 from gametime import GameTime
 import events
@@ -63,12 +63,13 @@ def createWorld():
     h.healthRestore = 100
     h.putInRoom(lr)
 
-    tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)    #    test Seed
+    tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 1, 5, 25, 2)    #    test Seed
    # tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
     tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
     tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer
-
+    tCP = CompletedPlant("Test", "test description", 25, 3)  #   test CompletedPlant
+    tCP.putInRoom(bY)
     tF.effect="fertilized"
     tF.putInRoom(bY)
     #i = Item("Rock", "This is just a rock.")
@@ -76,6 +77,7 @@ def createWorld():
     player.location = bY
     i.putInRoom(br), i.putInRoom(br)
     player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
+    player.pickup(tCP)
    # player.pickup(i), player.pickup(i)    #Pickup two macbooks
     #Monster("Bob the monster", 20, b)
 
@@ -179,6 +181,7 @@ def accessGarden(event):
                displayStr = "Plot #" + str(int(plotTargetNumber) + 1) +": \n"
                displayStr += "   Growing " + str(plotInfo[0]) + "\n"
                displayStr += "   Plant age: " + str(plotInfo[1]) + "\n"
+               displayStr += "   Fully Grown: " + str(plotInfo[3]) + "\n"
                displayStr += "   Current effects: " + plotEffects + "\n"
             
                clear()
@@ -195,6 +198,21 @@ def accessGarden(event):
             if not watered:
                print("There's nothing planted in that plot!")
                input("Press enter to continue...")
+         
+         elif commandWords[0].lower() == "harvest":
+            plotTargetNumber = command[8:]
+            plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "harvest 1" refer to the first plot, ie, plot 0. Again, a QOL thing.
+            plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
+            
+            harvested = event.eventGarden.harvestPlot(plot)
+            if not harvested:   #   if harvestPlot() returns False...
+               print("That plot does not contain a harvestable plant!")
+               input("Press enter to continue...")
+            else:
+               harvested.loc = player
+               player.items.append(harvested)    #   If harvestPlot() isn't False, harvested will be be a CompletedPlant item.
+               #player.pickup(harvested)  
+            
          elif commandWords[0].lower() == "back":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
             #   Basically, I'm wondering how to do what the input prompt is doing (returning us to the main loop) without actually making the code use an input()?
             #input("Press enter to continue...")

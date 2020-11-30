@@ -104,11 +104,17 @@ class Garden:
 			return True
 		return False
 		
+	def harvestPlot(self, plot):
+		if plot.growing != None:
+			completedPlant = plot.growing.returnCompletedPlant()
+			return completedPlant	#	Can either return a new completed plant item, or can return False
+		return False
+		
 	def returnPlotInfo(self, plot):
 		if plot.growing != None:	#	If there's a plant, with a name, in plot.growing...
-			return[plot.growing.name, plot.growing.age, plot.statusEffects]
+			return[plot.growing.name, plot.growing.age, plot.statusEffects, plot.growing.fullyGrown]
 		else:	#	If not (ie, plot.growing is None)...
-			return[plot.growing, plot.growing, plot.statusEffects]
+			return[plot.growing, plot.growing, plot.statusEffects, False]
 		
 class dirtPlot:
 	def __init__(self):

@@ -42,13 +42,14 @@ class Player:
 
     def inspectItem(self, name):
         item = self.getInventoryItemByName(name)    #   Tries to find item in player inventory
+        
         loc = "your inventory"
         if not item:    #   If it isn't in player inventory...
             item = self.location.getItemByName(name)
             loc = self.location.desc.lower()
 
         clear()
-        print(item.name.capitalize(), ":")
+        print(item.name.capitalize().strip() + ":")
         print(item.desc)
         print("It is currently located in ", loc,".", sep='' )
         print()
@@ -66,6 +67,7 @@ class Player:
         clear()
         print("You are currently carrying:")
         print()
+        
         for i in inventoryDisplayList:
             print(i)
         print()

@@ -99,4 +99,13 @@ class Plant:
 			self.daysWatered += 1
 			self.wateredToday = True
 		
+	def returnCompletedPlant(self):
+		if self.fullyGrown:
+			return CompletedPlant(self.name, "test desc", self.price, self.currentGrade)
+		return False
+	
+class CompletedPlant(Item):
+	def __init__(self, name, desc, value, grade):
+		super().__init__(name, desc, value)
+		self.grade = grade
 	
