@@ -68,7 +68,7 @@ def createWorld():
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
     tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
     tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer
-    tCP = CompletedPlant("Test", "test description", 25, 3)  #   test CompletedPlant
+    tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
     tCP.putInRoom(bY)
     tF.effect="fertilized"
     tF.putInRoom(bY)
@@ -78,6 +78,7 @@ def createWorld():
     i.putInRoom(br), i.putInRoom(br)
     player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
     player.pickup(tCP)
+    player.location = farmersMarket
    # player.pickup(i), player.pickup(i)    #Pickup two macbooks
     #Monster("Bob the monster", 20, b)
 

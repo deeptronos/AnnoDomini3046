@@ -44,6 +44,14 @@ class GardenEvent(Event):
         if subject.getInventoryItemByName(seed):
             return True
         return False
+        
+class MarketEvent(Event):
+    def __init__(self):
+        super().__init__()
+        self.sellerItems = []
+    def sellItems(self):
+        
+    
 
 gardenSupplyVendor = VendorEvent()
 gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]

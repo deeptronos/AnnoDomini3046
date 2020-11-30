@@ -3,6 +3,8 @@ import random
 from item import Item
 import updater
 
+#	Plant Types: Crop, Flower, Illicit, Rare, Test (non-obtainable in game)
+
 def clamp(n, minN, maxN):
 	return max(min(maxN, n), minN)
 
@@ -10,13 +12,14 @@ def mapRange(n, inMaxN, rangeMaxN):	#	Maps n (a number between 0 and inMaxN) to 
 	return (n / float(inMaxN) * rangeMaxN)
 
 class Seed(Item):	#	Making a seed item
-	def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
+	def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False, plantType="Crop"):
 		super().__init__(name, desc, value)
 		self.growthDuration = growthDuration
 		self.price = price
 		self.radiation = radiation 
 		self.exotic = exotic
 		self.plantPrice = plantPrice	#	The price of the fully-grown plant
+		self.plantType = plantType
 		
 	def becomePlant(self):
 		def nameProcess(seedName):	#	Turn the seed's name in to a proper plant name (just by removing the "seed" at the end of the seed's name)
@@ -29,11 +32,11 @@ class Seed(Item):	#	Making a seed item
 			
 		plantName = nameProcess(self.name)
 		
-		plant = Plant(plantName, self.growthDuration, self.price, self.plantPrice, self.radiation, self.exotic)
+		plant = Plant(plantName, self.growthDuration, self.price, self.plantPrice, self.radiation, self.exotic, self.plantType)
 		return plant
 
 class Plant:
-	def __init__(self, name, growthDuration, price, maxPrice, radiation, exotic):
+	def __init__(self, name, growthDuration, price, maxPrice, radiation, exotic, plantType):
 		self.name = name
 		self.growthDuration = growthDuration	#	Maximum is 45 days
 		self.size = 1
@@ -42,7 +45,7 @@ class Plant:
 		self.plantMaxValue = maxPrice	#	The maximum value of the plant
 		self.grades = ['poor', 'average', 'good', 'excellent', 'divine']
 		self.currentGrade = 1 #	currentGrade has a default of 'average'
-		
+		self.plantType
 			#	The 4 below variables all influence grade
 		self.radiation = clamp(radiation, 1, 10)	#	radiation is int between 1 and 10
 		self.beauty = 0	#	Initializing with 0 beauty; beauty is int between 0 and 10
@@ -101,11 +104,12 @@ class Plant:
 		
 	def returnCompletedPlant(self):
 		if self.fullyGrown:
-			return CompletedPlant(self.name, "test desc", self.price, self.currentGrade)
+			return CompletedPlant(self.name, "test desc", self.price, self.currentGrade, self.plantType)
 		return False
 	
 class CompletedPlant(Item):
-	def __init__(self, name, desc, value, grade):
+	def __init__(self, name, desc, value, grade, type):
 		super().__init__(name, desc, value)
 		self.grade = grade
+		self.type = type
 	
