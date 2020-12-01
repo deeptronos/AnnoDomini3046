@@ -1,0 +1,32 @@
+{
+	"seeds": {
+		"crop": {
+			"democrop": {
+				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":1000, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"crop", "season":"season"
+			}
+		},
+		"flower": {
+			"lavender": {
+					"plantName":"Lavender", "desc":"a lavender plant, blooms with radiant purple flowers.", "value":5, "growthDuration":5, "seedPrice":2.5, "plantPrice":5, "radiation":0, "exotic":false, "plantType":"flower", "season":"Spryng"
+				},
+			"rose": {
+				"plantName":"Rose", "desc":"a beautiful rose plant, blooms into deep, lovely reds.", "value":5, "growthDuration":7, "seedPrice":2.5, "plantPrice":10, "radiation":0, "exotic":false, "plantType":"flower", "season":"Otom"
+			}
+		},
+		"illicit": {
+			"illicitPlant": {
+				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"illicit", "season":"season"
+			}
+		},
+		"rare": {
+			"rarePlant": {
+				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"rare", "season":"season"
+			}
+		},
+		"test": {
+			"testPlant": {
+				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"plantType", "season":"season"
+			}
+		}
+	}
+}

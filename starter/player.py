@@ -1,4 +1,5 @@
 import os
+import updater
 
 
 def clear():
@@ -10,11 +11,19 @@ class Player:
         self.items = []
         self.health = 50
         self.alive = True
-        self.currency = 100
+        self.lindenDollars = 100
         self.dailyPoints = 10
         self.dailyPointsLimit = 10
-        self.attributes = ["self.health", "self.currency", "self.dailyPoints"]     #   For use in displaying current status ("me" command)
-
+        self.attributes = ["self.health", "self.lindenDollars", "self.dailyPoints"]     #   For use in displaying current status ("me" command)
+        self.visitedToday = {}
+        
+        updater.dailyUpdateRegister(self)
+        
+    def dailyUpdate(self):
+        self.bedtime() 
+        for i in self.visitedToday:
+            self.visitedToday[i] = False
+        
     def goDirection(self, direction):
         self.location = self.location.getDestination(direction)
 
@@ -39,7 +48,17 @@ class Player:
                 return i
 
         return False
-
+        
+    def getMultipleInventoryItemsByName(self, name):    #    Get a list of items from your inventory by their shared name
+        returnList = []
+        for i in self.items:
+            if i.name.lower() == name.lower():
+                returnList.append(i)  
+                
+        if returnList != []:
+            return returnList
+        return False
+        
     def inspectItem(self, name):
         item = self.getInventoryItemByName(name)    #   Tries to find item in player inventory
         
@@ -73,6 +92,19 @@ class Player:
         print()
         input("Press enter to continue...")
         
+    def returnSellableMarketGoods(self, goodClasses, goodTypes):
+        returnList, countedItems = [], []
+        for i in self.items:
+            if i not in countedItems and type(i) in goodClasses and i.type in goodTypes:
+                
+                count = str(self.items.count(i))
+                displayStr = i.name
+                displayStr += ( " x" + count)
+                returnList.append(displayStr)
+                countedItems.append(i)
+                
+        return returnList
+        
     def attackMonster(self, mon):
         clear()
         print("You are attacking " + mon.name)
@@ -92,18 +124,25 @@ class Player:
 
     def buy(self, purchaseTarget):
         cost = purchaseTarget.value
-        if self.currency >= cost:
-            self.currency -= cost
+        if self.lindenDollars >= cost:
+            self.lindenDollars -= cost
             self.items.append(purchaseTarget)
             purchaseTarget.loc = self
-            print("your new balance is ", self.currency)
-            input("Press enter to continue...")
+            print("Your new balance is L$", self.lindenDollars)
+            #input("Press enter to continue...")
+            return True
         else:
-            clear()
-            print("You don't have enough currency :<")
-            input("Press enter to continue...")
+            #clear()
+            print("You don't have enough Linden Dollars :<")
+            #input("Press enter to continue...")
             return False
-            
+    def sell(self, item):
+        value = item.value
+        self.lindenDollars += value
+        self.lindenDollars = round(self.lindenDollars, 2)
+        self.items.remove(item)
+        item.loc = None
+        
     def prepareSeedForPlanting(self, seedName):
         seed = self.getInventoryItemByName(seedName)
         self.items.remove(seed)

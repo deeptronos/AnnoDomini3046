@@ -3,7 +3,9 @@ import random
 from item import Item
 import updater
 
-#	Plant Types: Crop, Flower, Illicit, Rare, Test (non-obtainable in game)
+#	Plant Types: crop, flower, illicit, rare, test (non-obtainable in game)
+
+plantGrades = ['poor', 'average', 'good', 'excellent', 'divine']
 
 def clamp(n, minN, maxN):
 	return max(min(maxN, n), minN)
@@ -12,7 +14,7 @@ def mapRange(n, inMaxN, rangeMaxN):	#	Maps n (a number between 0 and inMaxN) to 
 	return (n / float(inMaxN) * rangeMaxN)
 
 class Seed(Item):	#	Making a seed item
-	def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False, plantType="Crop"):
+	def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic, plantType):
 		super().__init__(name, desc, value)
 		self.growthDuration = growthDuration
 		self.price = price
@@ -43,9 +45,8 @@ class Plant:
 		
 		self.price = price	#	Price will initially be the same as the seed item's price
 		self.plantMaxValue = maxPrice	#	The maximum value of the plant
-		self.grades = ['poor', 'average', 'good', 'excellent', 'divine']
 		self.currentGrade = 1 #	currentGrade has a default of 'average'
-		self.plantType
+		self.plantType = plantType
 			#	The 4 below variables all influence grade
 		self.radiation = clamp(radiation, 1, 10)	#	radiation is int between 1 and 10
 		self.beauty = 0	#	Initializing with 0 beauty; beauty is int between 0 and 10
