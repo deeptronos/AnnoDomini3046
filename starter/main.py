@@ -168,7 +168,8 @@ def vendor(event):
       
 
 def accessGarden(event):
-   #while playing and player.alive:
+   playing = True
+   while playing and player.alive:
       clear()
       print(header())
       print(event.eventGarden.returnGardenInfoString())
@@ -176,16 +177,20 @@ def accessGarden(event):
       commandSuccess = False
       while not commandSuccess:
          commandSuccess = True
-         command = input("What would you like to do? ")
+         command = input("What would you like to do? ('plant [seed name]'; 'fertilize #'; 'check #'; 'water #'; 'harvest #'; 'return') ")
          commandWords = command.split()
-           
+         
+         if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
+           commandWords = ["nothing"]
+         
          if commandWords[0].lower() == "plant":
             if event.hasSeedInInventory(player, command[6:]):
                seed = player.prepareSeedForPlanting(command[6:])
                event.eventGarden.plantFromSeed(seed)
             else:
                print("You don't have that in your inventory, or the object you're referring to isn't a seed.")
-               commandSuccess = False
+               #commandSuccess = False
+            commandSuccess = False
                
          elif commandWords[0].lower() == "fertilize":   #   command is "fertilize ###" to fertilize a specific plot
             plotTargetNumber= command[10:]
@@ -193,10 +198,11 @@ def accessGarden(event):
             if plot:
                fertilized = event.eventGarden.fertilizePlot(player, plot)
                if not fertilized:
-                  clear()
-                  print(header())
                   print("You don't have any fertilizer!")
-                  input("Press enter to continue...")
+               else:
+                  print("Fertilized plot " + plotTargetNumber)
+                  
+            commandSuccess = False
                   
          elif commandWords[0].lower() == "check":   #   command is "check ###" to check a specific plot
             plotTargetNumber = command[6:]
@@ -229,8 +235,8 @@ def accessGarden(event):
             watered = event.eventGarden.waterPlot(plot)
             if not watered:
                print("There's nothing planted in that plot!")
-               input("Press enter to continue...")
-         
+            commandSuccess = False
+            
          elif commandWords[0].lower() == "harvest":
             plotTargetNumber = command[8:]
             plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "harvest 1" refer to the first plot, ie, plot 0. Again, a QOL thing.
@@ -239,16 +245,19 @@ def accessGarden(event):
             harvested = event.eventGarden.harvestPlot(plot)
             if not harvested:   #   if harvestPlot() returns False...
                print("That plot does not contain a harvestable plant!")
-               input("Press enter to continue...")
             else:
                harvested.loc = player
                player.items.append(harvested)    #   If harvestPlot() isn't False, harvested will be be a CompletedPlant item.
                #player.pickup(harvested)  
-            
-         elif commandWords[0].lower() == "back":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
+            commandSuccess = False
+         elif commandWords[0].lower() == "return":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
             #   Basically, I'm wondering how to do what the input prompt is doing (returning us to the main loop) without actually making the code use an input()?
             #input("Press enter to continue...")
-            break   #   Is this the best practice?
+            #break   #   Is this the best practice?
+            playing = False
+            
+         else:
+            commandSuccess = False
 
 def accessFarmersMarket(event):
    playing = True
