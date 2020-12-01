@@ -6,8 +6,9 @@ class Room:
         self.monsters = []
         self.exits = []
         self.items = []
-        self.interactables = []    #    different than items; they're objects with events/functionality attached to them
-        self.roomEventTitles = None
+        self.roomEvents = []    #    different than items; they're objects with events/functionality attached to them
+        self.roomEventTitles = []
+        
     def addExit(self, exitName, destination):
         self.exits.append([exitName, destination])
     def getDestination(self, direction):
@@ -25,10 +26,13 @@ class Room:
     def removeItem(self, item):
         self.items.remove(item)
         
-    def addInteractable(self, interactable):
-        self.interactables.append(interactable)
-    def removeInteractables(self, interactable):
-        self.interactables.remove(interactable)
+    def addRoomEvent(self, title, event):
+        self.roomEventTitles.append(title)
+        self.roomEvents.append(event)
+        
+    def removeRoomEvent(self, title, event):
+        self.roomEventTitles.remove(title)
+        self.roomEvents.remove(event)
         
     def addMonster(self, monster):
         self.monsters.append(monster)

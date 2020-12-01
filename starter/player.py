@@ -95,7 +95,7 @@ class Player:
     def returnSellableMarketGoods(self, goodClasses, goodTypes):
         returnList, countedItems = [], []
         for i in self.items:
-            if i not in countedItems and type(i) in goodClasses and i.type in goodTypes:
+            if i not in countedItems and type(i) in goodClasses and i.type in goodTypes:    #    Yes, type(i) and i.type are entirely different things, but their naming sorta makes sense. type(i) is the class of the item i, and i.type is the property of item i that defines what type of plant it is.
                 
                 count = str(self.items.count(i))
                 displayStr = i.name

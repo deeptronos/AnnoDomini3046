@@ -1,6 +1,8 @@
 import os
 import updater
 
+from plant import Seed
+
 def clear():
 	os.system('cls' if os.name == 'nt' else 'clear')
 	
@@ -25,7 +27,7 @@ class Garden:
 		
 	def putInRoom(self, room):
 		self.loc = room
-		room.addInteractable(self)
+		#room.addInteractable(self) #	Not using "interactables" system anymore, using "room events" now
 		
 	def getPlotByNumber(self, plotNumStrInput):
 		plotNum = int(plotNumStrInput)	#	Convert player input, captured as a string, to an integer
@@ -86,7 +88,7 @@ class Garden:
 			if self.dirtPlots[i].growing == None:
 				self.dirtPlots[i].growing = plant
 				break
-				
+			
 	def fertilizePlot(self, callingEntity, plot):
 		fertilizer = callingEntity.getInventoryItemByName("fertilizer")
 		if fertilizer:

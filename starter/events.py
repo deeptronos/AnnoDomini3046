@@ -2,7 +2,7 @@ import random
 from gametime import GameTime
 from item import Item
 from garden import Garden
-from plant import plantGrades
+from plant import plantGrades, Seed
 
 class Event:
     def __init__(self):
@@ -43,7 +43,8 @@ class GardenEvent(Event):
             self.eventGarden = eventGarden
     def hasSeedInInventory(self, subject, seed):
         if subject.getInventoryItemByName(seed):
-            return True
+            if type(subject.getInventoryItemByName(seed)) == Seed:
+                 return True
         return False
         
 class MarketEvent(Event):

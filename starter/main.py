@@ -32,8 +32,9 @@ def createWorld():
    g = Garden(6, 2)
    g.putInRoom(bY)
    defaultBackyardGardenEvent = events.GardenEvent(g)
-   bY.roomEventTitles = ["garden"]
-   bY.roomEvents = [defaultBackyardGardenEvent]
+   bY.addRoomEvent("garden", defaultBackyardGardenEvent)
+   #bY.roomEventTitles = ["garden"]
+   #bY.roomEvents = [defaultBackyardGardenEvent]
    
    bed = Room("In Your Bed")
    bed.roomEventTitles = ["sleep"]
@@ -44,8 +45,9 @@ def createWorld():
     
    farmersMarket   = Room("The farmer's market")
    farmersMarketEvent = events.MarketEvent()
-   farmersMarket.roomEventTitles = ["market"]
-   farmersMarket.roomEvents = [farmersMarketEvent]
+  # farmersMarket.roomEventTitles = ["market"]
+   farmersMarket.addRoomEvent("market", farmersMarketEvent)
+   #farmersMarket.roomEvents = [farmersMarketEvent]
    farmersMarketEvent.marketName = "the farmer's market"
     
    gardenSupply    = Room("'Gardener's Delight' Garden Supply Emporium")
@@ -89,7 +91,7 @@ def createWorld():
    i.putInRoom(br), i.putInRoom(br)
   # player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
    player.pickup(tCP), player.pickup(potato),player.pickup(potato)
-   player.location = farmersMarket
+   #player.location = farmersMarket
    # player.pickup(i), player.pickup(i)    #Pickup two macbooks
    #Monster("Bob the monster", 20, b)
 
@@ -181,6 +183,9 @@ def accessGarden(event):
             if event.hasSeedInInventory(player, command[6:]):
                seed = player.prepareSeedForPlanting(command[6:])
                event.eventGarden.plantFromSeed(seed)
+            else:
+               print("You don't have that in your inventory, or the object you're referring to isn't a seed.")
+               commandSuccess = False
                
          elif commandWords[0].lower() == "fertilize":   #   command is "fertilize ###" to fertilize a specific plot
             plotTargetNumber= command[10:]
