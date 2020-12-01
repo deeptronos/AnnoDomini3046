@@ -19,6 +19,7 @@ gT = GameTime()
 
 #    TODO: make more seeds/plants in seeds.json; go through JSON -> seed -> plant -> CompletePlant process and check for bugs; add some sort of field office functionality; make farmer's market only open on weekends (?); add some sort of reward for rare plants (rudimentary exhibitions? maybe an internet forum :D!!); debug all inputs; make EVERYTHING more intuitive (write guide? maybe just for this beta)
 
+
 def createWorld():
 
    bedtime = events.SleepEvent(gT) #   Initializing this here, not in events.py, because we need to refer to gT
@@ -96,7 +97,7 @@ def createWorld():
 def header():
     title = "Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)"
     date = gT.formattedDate()
-    currency = player.lindenDollars
+    currency = "L$ " + str(player.lindenDollars)
     wDim = os.get_terminal_size()[0]
 
     iterant = 0
@@ -107,11 +108,13 @@ def header():
         elif i >= (wDim // 2) - (len(title)//2):
             line1 += title[i - (wDim // 2) - (len(title)//2)]
 
-    for i in range(wDim):   #   For loop that makes a line of text with the date, then fills to the window width with a symbol
+    for i in range(wDim):   #   For loop that makes a line of text with the date, then fills, to the window width minus the length of the currency string, with a symbol, then inserts the currency string
         if (i) < len(date) + 2 and i > 1:
             line2 += date[i - 2]
-        elif i > len(date) + 2:
+        elif i > len(date) + 2 and i < wDim - len(currency) - 1:
             line2 += "𖡻"
+        elif i >= wDim - len(currency):   #
+           line2 += currency[i - (wDim - len(currency))]
         else:
             line2 += " "
 

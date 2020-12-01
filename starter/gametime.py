@@ -8,6 +8,7 @@ class GameTime:
         self.dayCounter = 0 #   Used to keep track of how many days it has been since the year began, and reset on year change
         self.currentSeason = "spryng"
         self.year = 0
+        self.week = ["maunday", "toosday", "threesday","saturday","sunday"]
 
     def advanceDate(self):
         self.dayCounter += 1
@@ -42,4 +43,4 @@ class GameTime:
         if self.currentDate > 12 and self.currentDate < 20:
             dayExt = "th"
 
-        return "{season} {day}{ext}, {year}".format(season = self.currentSeason, day = self.currentDate, ext = dayExt, year = (3049 + self.year))
+        return "{weekday}, {day}{ext} of {season}, {year}".format(weekday = self.week[(self.currentDate - 1)%len(self.week)],season = self.currentSeason, day = self.currentDate, ext = dayExt, year = (3049 + self.year))
