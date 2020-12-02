@@ -16,7 +16,7 @@ class GameTime:
             self.currentDate += 1
         else:
             self.currentDate = 1
-            self.dayCounter = 0
+            #self.dayCounter = 0
             self.changeSeason()
 
         if self.dayCounter == 90:

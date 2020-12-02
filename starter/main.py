@@ -23,7 +23,11 @@ gT = GameTime()
 def createWorld():
 
    bedtime = events.SleepEvent(gT) #   Initializing this here, not in events.py, because we need to refer to gT
-
+   
+   #gT.changeSeason()  #  Testing GameTime stuff here
+   # for i in range(44):
+   #   gT.advanceDate()
+   
    #House Rooms:
    br = Room("Your Bedroom")
    lr = Room("Your Living Room")
@@ -73,35 +77,37 @@ def createWorld():
    Room.connectRooms(outside, "garden supply", gardenSupply, "home")
    Room.connectRooms(outside, "field office", fieldOffice, "home")
 
-   i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
+   #   The items being created below are mostly just things for testing, and so I've commented them out for now. Sorry for how messy this section is.
+
+   #i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
    
    
-   h = HealingItem("Juicebox", "(healing item) a bit of juice always helps")
-   h.healthRestore = 100
-   h.putInRoom(lr)
+   #h = HealingItem("Juicebox", "(healing item) a bit of juice always helps")
+   #h.healthRestore = 100
+   #h.putInRoom(lr)
    #tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 1, 5, 25, 2)    #    test Seed
    # tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
   # tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
-   tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer  #  Fertilizer is not implemented
+  # tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer  #  Fertilizer is not implemented
    tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
    potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
    #tCP.putInRoom(bY), potato.putInRoom(bY),potato.putInRoom(bY)
-   dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
-   dP = dS.becomePlant()
-   dP2 = dS2.becomePlant()
-   dP.fullyGrown, dP2.fullyGrown = True, True
+  # dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
+   #dP = dS.becomePlant()
+   #dP2 = dS2.becomePlant()
+   #dP.fullyGrown, dP2.fullyGrown = True, True
    
-   dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
+  # dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
    
-   dCP.loc, dCP2.loc = br, br
-   tF.effect="fertilized"
+   #dCP.loc, dCP2.loc = br, br
+  # tF.effect="fertilized"
    #tF.putInRoom(bY)
    #i = Item("Rock", "This is just a rock.")
    #i.putInRoom(b)
    player.location = br
-   dCP.putInRoom(br), dCP2.putInRoom(br)
-   player.pickup(dCP), player.pickup(dCP2)
+   #dCP.putInRoom(br), dCP2.putInRoom(br)
+   #player.pickup(dCP), player.pickup(dCP2)
    #i.putInRoom(br), i.putInRoom(br)
   # player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
    #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
@@ -510,7 +516,7 @@ def printSituation():
     clear()
     print(header())
     if player.firstTime:
-      print("Welcome to Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)!\nThe date is dispalyed in the above left corner, and your Linden Dollars are displayed in the top right corner.\nToday, try going to Gardener's Supply and buying some seeds to plant in your garden!\nType 'help' in the prompt to see your commands, and for some more helpful beginner tips!\nHave a good time.\n")
+      print("Welcome to Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)!\nThe date is displayed in the above left corner, and your Linden Dollars are displayed in the top right corner.\nToday, try going to Gardener's Supply and buying some seeds to plant in your garden!\nOnce you've grown and harvested plants, go to the farmer's market to sell them!\nType 'help' in the prompt to see your commands, and for some more helpful beginner tips!\nHave a good time.\n")
       player.firstTime = False
     
     print(player.location.desc)
@@ -560,7 +566,11 @@ def showHelp():
     print("    * Go outside of your home to access many cool places!")
     print("    * A new, different bounty hunter is available every day at the Field Office!")
     print("    * You must go to bed for anything in your garden to grow.")
+    print("    * Your health stat doesn't really matter much in this game.")
     print("    * You cannot currently save your game. You are dust, so once you terminate the program - or exit the main game loop somehow - to dust you will return.")
+    print("    * There are two 45-day seasons, Spryng and Otom, each with their own unique plants that can be grown during them.")
+    print("    * Return to this screen as often as you'd like! These tips are here to be referenced throughout the game.")
+    print()
     input("Press enter to continue...")
 
 def showPlayerStats():
@@ -701,7 +711,7 @@ while playing and player.alive:
               if player.location.roomEventTitles[i] == "field office":
                  accessFieldOffice(player.location.roomEvents[i])
                  
-        elif commandWords[0].lower() == "cashout":
+        elif commandWords[0].lower() == "cashout":  #  little command to give us some walking around money
           amnt = float(command[8:])
           player.lindenDollars += amnt
           

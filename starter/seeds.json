@@ -15,6 +15,9 @@
 			},
 			"otomradish": {
 				"plantName":"Otom Radish", "desc":"a crunchy, hardy root vegetable that will still thrive in Otom.", "value":0, "growthDuration":4, "seedPrice":2.5, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"cucumber": {
+				"plantName":"Cucumber", "desc":"A watery vine-plant.", "value":0, "growthDuration":7, "seedPrice":1.5, "plantPrice":7, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
 			}
 		
 		},
@@ -24,6 +27,9 @@
 				},
 			"rose": {
 				"plantName":"Rose", "desc":"a beautiful rose plant, blooms into deep, lovely reds.", "value":5, "growthDuration":7, "seedPrice":2.5, "plantPrice":10, "radiation":0, "exotic":false, "plantType":"flower", "season":"Otom"
+			},
+			"laserlily": {
+				"plantName":"Laser Lily", "desc":"a burnt orange plant that blooms with piercingly-incandescent flowers that are traditionally given to young students starting a new school year.", "value":5, "growthDuration":10, "seedPrice":5, "plantPrice":17, "radiation":0, "exotic":false, "plantType":"flower", "season":"Otom"
 			}
 		},
 		"illicit": {
