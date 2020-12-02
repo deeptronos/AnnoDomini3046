@@ -15,6 +15,7 @@ class Room:
         for e in self.exits:
             if e[0] == direction:
                 return e[1]
+        return False    #    Ensures we don't mess absolutely everything up
     def connectRooms(room1, dir1, room2, dir2):
         #creates "dir1" exit from room1 to room2 and vice versa
         room1.addExit(dir1, room2)
@@ -55,4 +56,4 @@ class Room:
     def randomNeighbor(self):
         return random.choice(self.exits)[1]
     def hasEvents(self):
-        return self.roomEventTitles != None
+        return self.roomEventTitles != []

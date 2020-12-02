@@ -6,7 +6,6 @@ from plant import Seed
 def clear():
 	os.system('cls' if os.name == 'nt' else 'clear')
 	
-
 class Garden:
 	def __init__(self, dirtW_Amnt, dirtH_Amnt, name="Your Garden"):
 		self.name = name
@@ -44,7 +43,16 @@ class Garden:
 		returnStr += str(self.dirtW_Amnt) + "x" + str(self.dirtH_Amnt) + " of growing space, for a total of " + str(self.dirtAmnt) + " plots.\n"
 		returnStr += "It currently looks like this: \n"
 		returnStr += self.visualizeGarden()
-
+		returnStr += "\nThe following plots contain fully grown plants, ready for harvesting:\n"
+		nothingGrown = True
+		for i in range(len(self.dirtPlots)):
+			if self.dirtPlots[i].growing != None:
+				if self.dirtPlots[i].growing.fullyGrown:
+					nothingGrown = False
+					returnStr += "  Plot " + str(i + 1) + " contains a fully grown " + self.dirtPlots[i].growing.name + "\n"
+		if nothingGrown:
+			returnStr += "  None\n"
+		
 		return returnStr
 		
 	def visualizeGarden(self):	#	returns a string that contains an intuitive text-based "visualization" of the garden
@@ -109,6 +117,7 @@ class Garden:
 	def harvestPlot(self, plot):
 		if plot.growing != None:
 			completedPlant = plot.growing.returnCompletedPlant()
+			plot.growing = None
 			return completedPlant	#	Can either return a new completed plant item, or can return False
 		return False
 		

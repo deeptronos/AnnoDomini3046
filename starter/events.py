@@ -3,15 +3,19 @@ from gametime import GameTime
 from item import Item
 from garden import Garden
 from plant import plantGrades, Seed
+from NPC import BountyHunter
+from fieldOffice import FieldOffice
 
 class Event:
     def __init__(self):
         self.actionCost = 0
+        self.daysAvailable = []
 
 class VendorEvent(Event):
     def __init__(self):
         super().__init__()
         self.vendorItems = []
+        self.vendorItemCategories = []
         self.greeting = None
         self.goodbye = None
         self.purchaseMessage = None
@@ -79,7 +83,13 @@ class MarketEvent(Event):
 
             self.sellerItems[i] = []
         return results
-
+        
+class FieldOfficeEvent(Event):
+    def __init__(self, eventFieldOffice):
+        super().__init__()
+        self.eventFieldOffice = eventFieldOffice
+    
+        
 gardenSupplyVendor = VendorEvent()
 gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]
 gardenSupplyVendor.greeting = "Welcome to Gardener's Delight! I'm Gardener, and I would be delighted to sell you some gardening supplies!"

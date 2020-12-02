@@ -11,12 +11,12 @@ class Player:
         self.items = []
         self.health = 50
         self.alive = True
-        self.lindenDollars = 100
+        self.lindenDollars = 10
         self.dailyPoints = 10
-        self.dailyPointsLimit = 10
-        self.attributes = ["self.health", "self.lindenDollars", "self.dailyPoints"]     #   For use in displaying current status ("me" command)
+        self.dailyPointsLimit = 10    #    These aren't used at the moment
+        self.attributes = ["self.health", "self.lindenDollars"]#, "self.dailyPoints"]     #   For use in displaying current status ("me" command)
         self.visitedToday = {}
-        
+        self.firstTime = True
         updater.dailyUpdateRegister(self)
         
     def dailyUpdate(self):
@@ -25,7 +25,12 @@ class Player:
             self.visitedToday[i] = False
         
     def goDirection(self, direction):
-        self.location = self.location.getDestination(direction)
+        dir =  self.location.getDestination(direction)
+        if not dir:
+            return False
+        else:
+            self.location = self.location.getDestination(direction)
+            return True
 
     def pickup(self, item):
         self.items.append(item)
@@ -148,6 +153,11 @@ class Player:
         self.items.remove(seed)
         seed.loc = None
         return seed
-        
+    
+    def checkValueAgainstPlayerLindendollars(self, value):    #    Newer function than many, so it isn't implemented very widely yet.
+        if value <= self.lindenDollars:
+            return True
+        return False
+    
     def bedtime(self):
         self.dailyPoints = self.dailyPointsLimit #  Refresh daily points for a new day

@@ -31,7 +31,10 @@ class GameTime:
         elif self.currentSeason == "otom":
             self.year += 1
             self.currentSeason = "spryng"
-
+            
+    def checkCurrentWeekday(self):
+        return self.week[(self.currentDate - 1)%len(self.week)]
+        
     def formattedDate(self):
         dayExt = "th"
         if self.currentDate%10 == 1:

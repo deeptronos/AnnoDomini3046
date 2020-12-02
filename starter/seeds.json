@@ -1,9 +1,22 @@
 {
 	"seeds": {
 		"crop": {
-			"democrop": {
-				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":1000, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"crop", "season":"season"
+			"potato": {
+				"plantName":"Potato", "desc":"a classic thing to eat. a hardy, respectable crop.", "value":0, "growthDuration":7, "seedPrice":1, "plantPrice":2.5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"corn": {
+				"plantName":"Corn", "desc":"a delicious snack when Popped.", "value":0, "growthDuration":5, "seedPrice":1.25, "plantPrice":3, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"tomato": {
+				"plantName":"Tomato", "desc":"a gross little mean little vegetable.", "value":0, "growthDuration":4, "seedPrice":1.5, "plantPrice":3, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"spryngradish": {
+				"plantName":"Spryng Radish", "desc":"a crunchy, tasty root vegetable that flourishes in the spryngtyme.", "value":0, "growthDuration":4, "seedPrice":2, "plantPrice":5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"otomradish": {
+				"plantName":"Otom Radish", "desc":"a crunchy, hardy root vegetable that will still thrive in Otom.", "value":0, "growthDuration":4, "seedPrice":2.5, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
 			}
+		
 		},
 		"flower": {
 			"lavender": {
@@ -19,13 +32,19 @@
 			}
 		},
 		"rare": {
-			"rarePlant": {
-				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"rare", "season":"season"
+			"shimmeringlovely": {
+				"plantName":"Shimmering Lovely", "desc":"a diamond plant, blooms into deep, lovely iridescents.", "value":2000, "growthDuration":7, "seedPrice":2000, "plantPrice":3500, "radiation":0, "exotic":true, "plantType":"rare", "season":"Spryng"
+			},
+			"ultrarose": {
+				"plantName":"Ultra Rose", "desc":"a rose plant that grows an enormous, beautiful rose every time. spiders love to make their homes in them.", "value":2000, "growthDuration":5, "seedPrice":2000, "plantPrice":3500, "radiation":0, "exotic":true, "plantType":"rare", "season":"Otom"
 			}
 		},
 		"test": {
 			"testPlant": {
 				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"plantType", "season":"season"
+			},
+			"demo": {
+				"plantName":"Demo", "desc":"grows quickly", "value":0, "growthDuration":1, "seedPrice":2.5, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"season"
 			}
 		}
 	}

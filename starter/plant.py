@@ -28,8 +28,12 @@ class Seed(Item):	#	Making a seed item
 			split = seedName.split()
 			split.pop(len(split) - 1)
 			returnStr = ""
-			for i in split:
-				returnStr += i.capitalize() + " "
+			if len(split) > 1:
+				for i in split:
+					returnStr += i.capitalize() + " "
+			else:
+				returnStr += split[0]
+				
 			return returnStr
 			
 		plantName = nameProcess(self.name)
@@ -89,8 +93,6 @@ class Plant:
 		self.currentGrade = int(mapRange(self.currentGrade, (100 + self.luck), 4))	#	Map currentGrade from a number, between 0 and the sum of the maximum possible beauty and the plant's luck, to a number (integer) between 0 and 4
 		
 	def grow(self):
-		print("grow()")
-		input("press enter...")
 		if self.watered and not self.fullyGrown:
 			if self.age < self.growthDuration:
 				self.age += 1

@@ -7,7 +7,7 @@ from plant import Plant, Seed, CompletedPlant, plantGrades
 from garden import Garden
 from gametime import GameTime
 import events
-
+from fieldOffice import FieldOffice
 import os
 import updater
 import json
@@ -49,20 +49,25 @@ def createWorld():
    farmersMarket.addRoomEvent("market", farmersMarketEvent)
    #farmersMarket.roomEvents = [farmersMarketEvent]
    farmersMarketEvent.marketName = "the farmer's market"
-    
+   farmersMarketEvent.daysAvailable = ["sunday", "saturday"]
+   
    gardenSupply    = Room("'Gardener's Delight' Garden Supply Emporium")
    gardenSupply.roomEventTitles = ["vendor"]   #   We can buy stuff in the garden supply
    gardenSupply.roomEvents = [events.gardenSupplyVendor]
-
+   gardenSupply.roomEvents[0].vendorItemCategories = ["crop", "flower"]  #  The garden supply store only sells crops and flowers.
+   
    fieldOffice     = Room("Wasteland Field Office")
-
+   fO = FieldOffice("the field office")
+   fO.putInRoom(fieldOffice)
+   defaultFieldOfficeEvent = events.FieldOfficeEvent(fO)
+   fieldOffice.addRoomEvent("field office", defaultFieldOfficeEvent)
 
    Room.connectRooms(br, "living room",  lr, "bedroom")
-   Room.connectRooms(br, "to bed", bed, "out of bed") #   Bed is a "room" that advances the day when you enter it
+   Room.connectRooms(br, "to bed", bed, "out of bed") #   Bed is a "room" that advances the day when you sleep
    Room.connectRooms(lr, "backyard", bY, "living room")
    Room.connectRooms(lr, "outside", outside, "inside")
 
-   Room.connectRooms(bed, "backyard", bY, "bed")   #   FOR TESTING
+  
 
    Room.connectRooms(outside, "farmers market", farmersMarket, "home")
    Room.connectRooms(outside, "garden supply", gardenSupply, "home")
@@ -71,29 +76,39 @@ def createWorld():
    i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
    
    
-   h = HealingItem("Juicebox", "a bit of juice always helps")
+   h = HealingItem("Juicebox", "(healing item) a bit of juice always helps")
    h.healthRestore = 100
    h.putInRoom(lr)
    #tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 1, 5, 25, 2)    #    test Seed
    # tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)
        #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
   # tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
-   tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer
+   tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer  #  Fertilizer is not implemented
    tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
    potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
-   tCP.putInRoom(bY), potato.putInRoom(bY),potato.putInRoom(bY)
+   #tCP.putInRoom(bY), potato.putInRoom(bY),potato.putInRoom(bY)
+   dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
+   dP = dS.becomePlant()
+   dP2 = dS2.becomePlant()
+   dP.fullyGrown, dP2.fullyGrown = True, True
    
+   dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
+   
+   dCP.loc, dCP2.loc = br, br
    tF.effect="fertilized"
-   tF.putInRoom(bY)
+   #tF.putInRoom(bY)
    #i = Item("Rock", "This is just a rock.")
    #i.putInRoom(b)
-   player.location = bY
-   i.putInRoom(br), i.putInRoom(br)
+   player.location = br
+   dCP.putInRoom(br), dCP2.putInRoom(br)
+   player.pickup(dCP), player.pickup(dCP2)
+   #i.putInRoom(br), i.putInRoom(br)
   # player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
-   player.pickup(tCP), player.pickup(potato),player.pickup(potato)
-   #player.location = farmersMarket
+   #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
+   #player.location = fieldOffice
    # player.pickup(i), player.pickup(i)    #Pickup two macbooks
    #Monster("Bob the monster", 20, b)
+   updater.dailyUpdateAll()
 
 
 def header():
@@ -138,19 +153,23 @@ def vendor(event):
    player.visitedToday[event] = True   #   Functionality not implemented, ignore this :P
 
    event.vendorItems = seeds[gT.currentSeason]   #   The vendor is selling the current season's seeds
-   #else:
-   #return event.vendorItems
-   
+  
+   for i in event.vendorItems:  #  Remove anything from vendorItems that isn't in the allowed categories as designated by event.vendorItemCategories
+     if i.plantType not in event.vendorItemCategories:
+       event.vendorItems.remove(i)
+  
    clear()
    print(header())
    print(event.greeting)
+   print("Here's what's for sale:")
+   print()
    print(visualizeContainer(len(event.greeting), "down"))
    
    for i in event.vendorItems:
      print(i.name,", '" ,i.desc,"' - price: L$", i.value)
    
    print(visualizeContainer(len(event.greeting), "up"))
-   
+   print()
    commandSuccess = False
    while not commandSuccess:
      commandSuccess = True
@@ -173,11 +192,10 @@ def accessGarden(event):
       clear()
       print(header())
       print(event.eventGarden.returnGardenInfoString())
-       
       commandSuccess = False
       while not commandSuccess:
          commandSuccess = True
-         command = input("What would you like to do? ('plant [seed name]'; 'fertilize #'; 'check #'; 'water #'; 'harvest #'; 'return') ")
+         command = input("What would you like to do? ('plant [seed name]'; 'check #'; 'water #'; 'harvest #'; 'return') ")
          commandWords = command.split()
          
          if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
@@ -187,10 +205,11 @@ def accessGarden(event):
             if event.hasSeedInInventory(player, command[6:]):
                seed = player.prepareSeedForPlanting(command[6:])
                event.eventGarden.plantFromSeed(seed)
+               commandSuccess = True
             else:
                print("You don't have that in your inventory, or the object you're referring to isn't a seed.")
                #commandSuccess = False
-            commandSuccess = False
+               commandSuccess = False
                
          elif commandWords[0].lower() == "fertilize":   #   command is "fertilize ###" to fertilize a specific plot
             plotTargetNumber= command[10:]
@@ -229,13 +248,19 @@ def accessGarden(event):
          
          elif commandWords[0].lower() == "water":
             plotTargetNumber = command[6:]
+            if plotTargetNumber == " " or plotTargetNumber == "":
+              print("fail")
+              break
             plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "water 1" refer to the first plot, ie, plot 0. Again, a QOL thing.
+            
             plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
             
             watered = event.eventGarden.waterPlot(plot)
             if not watered:
-               print("There's nothing planted in that plot!")
-            commandSuccess = False
+              print("There's nothing planted in that plot!")
+              commandSuccess = False
+            else:
+              commandSuccess = True
             
          elif commandWords[0].lower() == "harvest":
             plotTargetNumber = command[8:]
@@ -245,11 +270,12 @@ def accessGarden(event):
             harvested = event.eventGarden.harvestPlot(plot)
             if not harvested:   #   if harvestPlot() returns False...
                print("That plot does not contain a harvestable plant!")
+               commandSuccess = False
             else:
                harvested.loc = player
                player.items.append(harvested)    #   If harvestPlot() isn't False, harvested will be be a CompletedPlant item.
                #player.pickup(harvested)  
-            commandSuccess = False
+               commandSuccess = True
          elif commandWords[0].lower() == "return":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
             #   Basically, I'm wondering how to do what the input prompt is doing (returning us to the main loop) without actually making the code use an input()?
             #input("Press enter to continue...")
@@ -262,74 +288,148 @@ def accessGarden(event):
 def accessFarmersMarket(event):
    playing = True
    event.__init__()
-   event.marketName = "The farmer's market"
+   event.marketName = "The weekend farmer's market"
+   event.daysAvailable = ["sunday", "saturday"]
+   if gT.checkCurrentWeekday() in event.daysAvailable:
+     while playing and player.alive:
+        clear()
+        print(header())
+        print("Welcome to " + event.marketName +"!")
+        print("Ready to sell your goods? Here's what you've got that'll sell here:")
+        sellableGoods = player.returnSellableMarketGoods([CompletedPlant], ["crop", "flower", "test"])
+        for i in sellableGoods:
+           print(i)
+        if event.sellerItemsList != []:
+           print("Here's what you're currently planning to sell:")
+           stackedSellItems = stackItemList(event.sellerItemsList)
+           for i in stackedSellItems: print(i)
+        
+        commandSuccess = False
+        while not commandSuccess:
+           commandSuccess
+           command = input("What would you like to do? (Commands: 'sell [item name]'; 'check'; 'clear'; 'finalize'; 'return') ")
+           commandWords = command.split()
+           if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
+             commandWords = ["nothing"]
+             
+           if commandWords[0].lower() == "sell":   #   'sell [itemname]' will make all items in your inventory with that name be sellable 
+              sellTargetName = command[5:]
+              sellTargets = player.getMultipleInventoryItemsByName(sellTargetName)
+              
+              if sellTargets != False and sellTargets[0] not in event.sellerItemsList:
+                 for i in sellTargets:
+                    event.addOnToSellerItemsList(i)
+                    
+                 commandSuccess = True
+              elif sellTargets == False:
+                print("Not a sellable item.")
+                
+              elif sellTargets[0] in event.sellerItemsList:
+                 print("You're already planning to sell all of those!")
+     
+           elif commandWords[0].lower() == "finalize":   #   Finalize what they're selling
+              if event.sellerItemsList != []:
+                 event.finalizeSellerItems()
+                 results = event.sellAllItems(player)
+                 print(results)
+                 print("Your new balance is L$ " + str(player.lindenDollars))
+                 #event.sellItems()
+                 input("Press enter to continue...")
+                 commandSuccess = True
+                 playing = False
+                 # clear()
+                 # print()
+                 # input("press enter")
+              else:
+                 print("You haven't marked anything for sale!")
+                 commandSuccess = False
+             
+           elif commandWords[0].lower() == "clear":   #   Reset the variables containing what we're planning to sell
+              event.sellerItemsList = []
+              event.sellerItems = {"crop":[], "flower":[], "illicit":[], "rare":[], 'test':[]}   #   organized by plant type
+              commandSuccess = True
+              
+           elif commandWords[0].lower() == "return":   #   Return out of the "market" sub-menu
+              if event.sellerItemsList != []:   #   Player cannot leave the market unless they aren't selling anything
+                 print("Wait! You still have items marked for sale. Please 'clear' them to exit the market.")
+                 commandSuccess = False
+                 continue
+                 
+              commandSuccess = True
+              playing = False   #   Yes the player is still playing, but this variable is used here to contain/exit the super-loop that it's contained in/
+           else:
+              print("Not a valid command")
+              commandSuccess = False
+   else:
+     clear()
+     print(header())
+     print("The farmer's market is closed on weekdays! Try again this weekend.")
+     print()
+     input("Press enter to continue...")
+     
+def accessFieldOffice(event):
    
+   event.eventFieldOffice.possibleSeeds = returnSeasonalSeedsByType(seeds, 'rare')
+   
+   playing = True
    while playing and player.alive:
       clear()
       print(header())
-      print("Welcome to " + event.marketName +"!")
-      print("Ready to sell your goods? Here's what you've got that'll sell here:")
-      sellableGoods = player.returnSellableMarketGoods([CompletedPlant], ["crop", "flower", "test"])
-      for i in sellableGoods:
-         print(i)
-      if event.sellerItemsList != []:
-         print("Here's what you're currently planning to sell:")
-         stackedSellItems = stackItemList(event.sellerItemsList)
-         for i in stackedSellItems: print(i)
-      
+      print("Welcome to " + event.eventFieldOffice.fieldOfficeName + "!")
+      print()
+      print(event.eventFieldOffice.returnFieldOfficeInfo())
+      print()
+      print("Gamer's Tips: Don't be too fast to give a bounty hunter a wager! If they aren't 'pure-hearted', don't wager more than you can afford to lose. In addition, bounty hunters are quite expensive if you want a real chance at a return, so feel free to wait until you've progressed significantly before you interact with them.")
+      print()
       commandSuccess = False
       while not commandSuccess:
-         commandSuccess
-         command = input("What would you like to do? (Commands: 'sell [item name]'; 'check'; 'clear'; 'finalize'; 'return') ")
+         commandSuccess = True
+         command = input("What would you like to do? ('put up [L$#]'; 'return') ")
          commandWords = command.split()
+         
          if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
-           commandWords = ["nothing"]
-           
-         if commandWords[0].lower() == "sell":   #   'sell [itemname]' will make all items in your inventory with that name be sellable 
-            sellTargetName = command[5:]
-            sellTargets = player.getMultipleInventoryItemsByName(sellTargetName)
+            commandWords = ["nothing", "nothing"]
             
-            if sellTargets != False and sellTargets[0] not in event.sellerItemsList:
-               for i in sellTargets:
-                  event.addOnToSellerItemsList(i)
-                  
-               commandSuccess = True
-               
-            elif sellTargets[0] in event.sellerItemsList:
-               print("You're already planning to sell all of those!")
-   
-         elif commandWords[0].lower() == "finalize":   #   Finalize what they're selling
-            if event.sellerItemsList != []:
-               event.finalizeSellerItems()
-               results = event.sellAllItems(player)
-               print(results)
-               print("Your new balance is L$ " + str(player.lindenDollars))
-               #event.sellItems()
-               input("Press enter to continue...")
-               commandSuccess = True
-               playing = False
-               # clear()
-               # print()
-               # input("press enter")
+         elif len(commandWords) > 1 and " ".join([commandWords[0].lower(), commandWords[1].lower()]) == "put up":
+            totalWager = command[7:]
+            totalWager = float(totalWager)
+            if totalWager > 0:
+              if player.checkValueAgainstPlayerLindendollars(totalWager):   #   If the player has the money....
+                 
+                 event.eventFieldOffice.putUpWager(totalWager)
+                 commandSuccess = False
+                 while not commandSuccess:
+                    commandSuccess = True
+                    command = input("Launch " + event.eventFieldOffice.hunter.name + "'s hunt? ('y'/'n')")
+                    commandWords = command.split()
+                    if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
+                       commandWords = ["nothing"]
+                    elif commandWords[0].lower() == "y" or commandWords[0].lower() == "yes":
+                       player.lindenDollars -= totalWager
+                       print("Your new balance is L$", player.lindenDollars)
+                       print()
+                       
+                       huntResult = event.eventFieldOffice.doHunt()   #   This'll be the seed the hunter got, if they get one
+                       if huntResult:
+                          player.items.append(huntResult)
+                          huntResult.loc = player
+                          print("   " + huntResult.name + " added to inventory.")
+                    elif commandWords[0].lower() == "n":
+                       event.eventFieldOffice.cancelWager()
+                       print("Hunt cancelled.")
+              else:
+                 print()
+                 print(" 'Sorry pal, you dont have that kinda cash! Come back when you've got what it takes to make this happen.'")
+                 print()
+                 
             else:
-               print("You haven't marked anything for sale!")
-               commandSuccess = False
-           
-         elif commandWords[0].lower() == "clear":   #   Reset the variables containing what we're planning to sell
-            event.sellerItemsList = []
-            event.sellerItems = {"crop":[], "flower":[], "illicit":[], "rare":[], 'test':[]}   #   organized by plant type
-            commandSuccess = True
+              print("  'No hunter'll get outta bed for that kinda money! Make it worth my while, scumbag!'")
             
-         elif commandWords[0].lower() == "return":   #   Return out of the "market" sub-menu
-            if event.sellerItemsList != []:   #   Player cannot leave the market unless they aren't selling anything
-               print("Wait! You still have items marked for sale. Please 'clear' them to exit the market.")
-               commandSuccess = False
-               continue
-               
-            commandSuccess = True
-            playing = False   #   Yes the player is still playing, but this variable is used here to contain/exit the super-loop that it's contained in/
+            commandSuccess = False
+            
+         elif commandWords[0].lower() == "return":
+            playing = False
          else:
-            print("Not a valid command")
             commandSuccess = False
 
 def clear():
@@ -379,14 +479,16 @@ def readSeedsFromJSON(file):
                
             plantName = newItemProps[0]
             desc   = newItemProps[1]
-            value = newItemProps[2]
+            value = newItemProps[2]  #  Not really used beyond the seed
             growthDuration = newItemProps[3]
             seedPrice = newItemProps[4]
-            plantPrice = newItemProps[5]
+            plantPrice = newItemProps[5]  #  Carries over to CompletedPlant
             radiation = newItemProps[6]
             exotic = newItemProps[7]
             plantType = newItemProps[8]
             season = newItemProps[9].lower()
+            
+            value = seedPrice  #  
             
             newSeed = Seed(plantName + " seed", desc, value, growthDuration, seedPrice, plantPrice, radiation, exotic, plantType)
             outDict[season].append(newSeed)
@@ -394,11 +496,23 @@ def readSeedsFromJSON(file):
    return outDict
 seeds = readSeedsFromJSON('seeds.json')
 
+def returnSeasonalSeedsByType(seedsList, type):
+   output = []
+   for i in seedsList[gT.currentSeason]:
+      if i.plantType == type:
+         output.append(i)
+   if output != []:
+      return output
+   
+   return False
 
 def printSituation():
     clear()
     print(header())
-
+    if player.firstTime:
+      print("Welcome to Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)!\nThe date is dispalyed in the above left corner, and your Linden Dollars are displayed in the top right corner.\nToday, try going to Gardener's Supply and buying some seeds to plant in your garden!\nType 'help' in the prompt to see your commands, and for some more helpful beginner tips!\nHave a good time.\n")
+      player.firstTime = False
+    
     print(player.location.desc)
     print()
     if player.location.hasMonsters():
@@ -407,33 +521,46 @@ def printSituation():
             print(m.name)
         print()
     if player.location.hasItems():
-        print("This room contains the following items:")
+        print("This room contains the following items ('pickup <item>'):")
         for i in player.location.items:
             print(i.name)
         print()
-    print("You can do the following things in this room:")
+    print("You can go to the following locations from this area ('go <location>'):")
     for e in player.location.exitNames():
         print(e)
-
+    print()
     if player.location.hasEvents():
-        print("You can do the following interactions:")
+        print("You can do the following interactions ('<interaction name>'): ")
         for i in player.location.roomEventTitles:
             print(i)
-    print()
+        print()
 
 def showHelp():
     clear()
-    print("go <direction> -- moves you in the given direction")
-    print("inventory -- opens your inventory")
-    print("pickup <item> -- picks up the item")
-    print("drop <item> -- Drop an item from your inventory")
-    print("sleep -- In areas that contain a sleepable bed of some sort, use this to go to bed")
-    print("vendor -- In areas in which a vendor resides, use this to browse and purchase their wares")
-    print("wait -- Wait a cycle")
+    print("go <location> -- navigates you to the given location.")
+    print("inventory -- opens your inventory.")
+    print("pickup <item> -- picks up the item.")
+    print("drop <item> -- Drop an item from your inventory.")
+    print("sleep -- In areas that contain a sleepable bed of some sort, use this to go to bed.")
+    print("vendor -- In areas in which a vendor resides, use this to browse and purchase their wares.")
+    print("garden -- In areas that contain a garden, use this to access it.")
+    print("market -- In areas that contain a market, use this to start selling your goods.")
+    print("field office -- In  areas that contain a field office, use this to access it.")
+    print("wait -- Wait a cycle.")
     print("heal <item> -- Uses a healing <item> from your inventory to increase your health. Be mindful - they're often single use.")
-    print("inspect <item> -- Inspect an <item>")
-    print("me -- See the current state of your stats and Linden Dollars")
+    print("inspect <item> -- Inspect an <item>.")
+    print("me -- See the current state of your stats and Linden Dollars.")
     print()
+    print("Gamer's Tips:")
+    print("    * The farmer's market is only open on weekends - Saturday and Sunday.")
+    print("    * Go to your backyard, fromy your living room, to access your garden!")
+    print("    * Accessing the Field Office lets you fund bounty hunters, who'll try to find rare, extremely valuable seeds for you in return.")
+    print("    * Don't forget to water anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
+    print("    * Make sure you type item names and commands correctly!")
+    print("    * Go outside of your home to access many cool places!")
+    print("    * A new, different bounty hunter is available every day at the Field Office!")
+    print("    * You must go to bed for anything in your garden to grow.")
+    print("    * You cannot currently save your game. You are dust, so once you terminate the program - or exit the main game loop somehow - to dust you will return.")
     input("Press enter to continue...")
 
 def showPlayerStats():
@@ -465,6 +592,8 @@ def visualizeContainer(width, direction):
 
 createWorld()
 playing = True
+firstTime = True  #  Keeps track of the player's first time opening the game. Will be "more" implemented once saving is a thing
+
 while playing and player.alive:
     printSituation()
     commandSuccess = False
@@ -472,14 +601,17 @@ while playing and player.alive:
 
     while not commandSuccess:
         commandSuccess = True
-        command = input("What now? ")
+        command = input("What now? ('help' for a list of possible commands) ")
         commandWords = command.split()
         
         if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
-           commandWords = ["nothing"]
+           commandWords = ["nothing", "nothing"]
            
         if commandWords[0].lower() == "go":   #CAN handle multi-word directions now that we're using goDirection on the sliced input string
-            player.goDirection(command[3:])
+            move = player.goDirection(command[3:])
+            if not move:
+              commandSuccess = False
+              print("Not an accessable location.")
             timePasses = True
 
         elif commandWords[0].lower() == "pickup":  #can handle multi-word objects
@@ -510,6 +642,8 @@ while playing and player.alive:
             player.showInventory()
         elif commandWords[0].lower() == "help":
             showHelp()
+            #firstTime = False
+            
         elif commandWords[0].lower() == "exit":
             playing = False
         elif commandWords[0].lower() == "attack":
@@ -559,6 +693,18 @@ while playing and player.alive:
            for i in range(len(player.location.roomEventTitles)):
               if player.location.roomEventTitles[i] == "market":
                   accessFarmersMarket(player.location.roomEvents[i])
+                  
+        #elif commandWords[0].lower() == "field office":
+        #elif " ".join([commandWords[0].lower(), commandWords[1].lower()]) == "field office":
+        elif commandWords[0].lower() == "field" and commandWords[1].lower() == "office":
+           for i in range(len(player.location.roomEventTitles)):
+              if player.location.roomEventTitles[i] == "field office":
+                 accessFieldOffice(player.location.roomEvents[i])
+                 
+        elif commandWords[0].lower() == "cashout":
+          amnt = float(command[8:])
+          player.lindenDollars += amnt
+          
         else:
             print("Not a valid command")
             commandSuccess = False
