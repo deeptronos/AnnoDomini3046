@@ -553,7 +553,7 @@ def showHelp():
     print()
     print("Gamer's Tips:")
     print("    * The farmer's market is only open on weekends - Saturday and Sunday.")
-    print("    * Go to your backyard, fromy your living room, to access your garden!")
+    print("    * Go to your backyard, from your living room, to access your garden!")
     print("    * Accessing the Field Office lets you fund bounty hunters, who'll try to find rare, extremely valuable seeds for you in return.")
     print("    * Don't forget to water anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
     print("    * Make sure you type item names and commands correctly!")
