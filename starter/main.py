@@ -17,7 +17,13 @@ gT = GameTime()
 #seeds = {}
 
 
-#    TODO: make more seeds/plants in seeds.json; go through JSON -> seed -> plant -> CompletePlant process and check for bugs; add some sort of field office functionality; make farmer's market only open on weekends (?); add some sort of reward for rare plants (rudimentary exhibitions? maybe an internet forum :D!!); debug all inputs; make EVERYTHING more intuitive (write guide? maybe just for this beta)
+#    TODO: make more seeds/plants in seeds.json; 
+# TODO: go through JSON -> seed -> plant -> CompletePlant process and check for bugs; 
+#TODO: Add pet functionality; supplement gardening gameplay
+#TODO: Make bounty hunting more viable
+#TODO: add some sort of reward for rare plants (rudimentary exhibitions? maybe an internet forum :D!!); 
+#TODO: debug all inputs; 
+#TODO: make EVERYTHING more intuitive (write guide? maybe just for this beta)
 
 
 def createWorld():
