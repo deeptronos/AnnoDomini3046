@@ -88,8 +88,12 @@ class FieldOfficeEvent(Event):
     def __init__(self, eventFieldOffice):
         super().__init__()
         self.eventFieldOffice = eventFieldOffice
+
+class PetEvent(Event):
+    def __init__(self, eventPet):
+        super().__init__()
+        self.eventPet = eventPet
     
-        
 gardenSupplyVendor = VendorEvent()
 gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]
 gardenSupplyVendor.greeting = "Welcome to Gardener's Delight! I'm Gardener, and I would be delighted to sell you some gardening supplies!"

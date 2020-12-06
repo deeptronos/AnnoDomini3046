@@ -18,5 +18,6 @@ def dailyUpdateAll():
 def dailyUpdateRegister(thing):
     dailyUpdates.append(thing)
 
-def deregister(thing):
+def dailyUpdateDeregister(thing):
     dailyUpdates.remove(thing)
+    

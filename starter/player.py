@@ -17,6 +17,9 @@ class Player:
         self.attributes = ["self.health", "self.lindenDollars"]#, "self.dailyPoints"]     #   For use in displaying current status ("me" command)
         self.visitedToday = {}
         self.firstTime = True
+        
+        self.myPet = None
+        
         updater.dailyUpdateRegister(self)
         
     def dailyUpdate(self):
@@ -153,7 +156,12 @@ class Player:
         self.items.remove(seed)
         seed.loc = None
         return seed
-    
+        
+    def prepareEggForHatching(self, egg):    #    This is very very similar to prepareSeedForPlanting, however it's a distinct function for the sake of debugging :P
+        self.items.remove(egg)
+        egg.loc = None
+        return egg
+        
     def checkValueAgainstPlayerLindendollars(self, value):    #    Newer function than many, so it isn't implemented very widely yet.
         if value <= self.lindenDollars:
             return True

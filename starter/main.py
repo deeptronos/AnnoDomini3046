@@ -8,6 +8,8 @@ from garden import Garden
 from gametime import GameTime
 import events
 from fieldOffice import FieldOffice
+from pets import PetEgg, Pet
+
 import os
 import updater
 import json
@@ -24,7 +26,7 @@ gT = GameTime()
 #TODO: add some sort of reward for rare plants (rudimentary exhibitions? maybe an internet forum :D!!); 
 #TODO: debug all inputs; 
 #TODO: make EVERYTHING more intuitive (write guide? maybe just for this beta)
-
+#TODO: make universal, contextual tutorial() function to explain the particular context's actions
 
 def createWorld():
 
@@ -129,7 +131,7 @@ def header():
     currency = "L$ " + str(player.lindenDollars)
     wDim = os.get_terminal_size()[0]
 
-    iterant = 0
+    
     line1, line2, line3, output = "", "", "", ""
     for i in range(wDim):   #   For loop to make a line of text the width of the terminal with the title centered in the middle
         if i < (wDim // 2) - (len(title)//2) or i >= (wDim // 2) + (len(title)//2):
@@ -444,6 +446,32 @@ def accessFieldOffice(event):
          else:
             commandSuccess = False
 
+def accessPet(event):
+  playing = True
+  while playing and player.alive:
+    clear()
+    print(header())
+    print(event.eventPet.returnPetInfoVisualization())
+    commandSuccess = False
+    while not commandSuccess:
+      commandSuccess = True
+      command = input("What would you like to do? ")
+      commandWords = command.split()
+       
+      if commandWords == []:   #   Allows us to have multi-word directions without causing an index error (yes this is a dumb way to do this but ummmmmmmmm)
+        commandWords = ["nothing", "nothing"]
+        
+      if commandWords[0].lower() == "command":  
+        print("input: command")
+        commandSuccess = False
+      elif commandWords[0].lower() == "die":
+        event.eventPet.die()
+        #playing = False
+      elif commandWords[0].lower() == "return":
+        playing = False
+       
+    
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -721,6 +749,27 @@ while playing and player.alive:
           amnt = float(command[8:])
           player.lindenDollars += amnt
           
+        elif commandWords[0].lower() == "givemepet":
+          petName = "test pet"
+          pE = PetEgg(petName, "a funny little guy", 100, "dog")
+          pE.putInRoom(player.location)
+          player.pickup(pE)
+          
+        elif commandWords[0].lower() == "hatch":
+          targetName = command[6:]
+          target = player.getInventoryItemByName(targetName)
+          
+          if target and type(target) == PetEgg:
+            pet = target.hatch()
+            petEvent = events.PetEvent(pet)
+            player.location.addRoomEvent("pet", petEvent)
+            pet.loc = player.location
+            pet.myRoomEvent = petEvent
+            
+        elif commandWords[0].lower() == "pet":
+          for i in range(len(player.location.roomEventTitles)):
+            if player.location.roomEventTitles[i] == "pet":
+              accessPet(player.location.roomEvents[i])
         else:
             print("Not a valid command")
             commandSuccess = False
