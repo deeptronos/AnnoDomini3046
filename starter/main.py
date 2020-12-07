@@ -295,12 +295,17 @@ def accessGarden(event):
          elif commandWords[0].lower() == "water":
             plotTargetNumber = command[6:]
             if plotTargetNumber == " " or plotTargetNumber == "":
-              print("fail")
-              break
+              print("Please specify a plot")
+              commandSuccess = False
+              continue 
             plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "water 1" refer to the first plot, ie, plot 0. Again, a QOL thing.
             
             plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
-            
+            if not plot:
+              print("That plot doesn't exist!")
+              commandSuccess = False
+              continue 
+              
             watered = event.eventGarden.waterPlot(plot)
             if not watered:
               print("There's nothing planted in that plot!")
@@ -311,8 +316,13 @@ def accessGarden(event):
          elif commandWords[0].lower() == "harvest":
             plotTargetNumber = command[8:]
             plotTargetNumber = str(int(plotTargetNumber) - 1)   #   Make "harvest 1" refer to the first plot, ie, plot 0. Again, a QOL thing.
-            plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
             
+            plot = event.eventGarden.getPlotByNumber(plotTargetNumber)
+            if not plot:
+              print("That plot doesn't exist!")
+              commandSuccess = False
+              continue 
+              
             harvested = event.eventGarden.harvestPlot(plot)
             if not harvested:   #   if harvestPlot() returns False...
                print("That plot does not contain a harvestable plant!")
