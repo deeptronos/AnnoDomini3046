@@ -5,6 +5,7 @@ from garden import Garden
 from plant import plantGrades, Seed
 from NPC import BountyHunter
 from fieldOffice import FieldOffice
+from pets import PetEgg
 
 class Event:
     def __init__(self):
@@ -95,9 +96,13 @@ class PetEvent(Event):
         self.eventPet = eventPet
     
 gardenSupplyVendor = VendorEvent()
-gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]
+gardenSupplyVendor.vendorItems = [Item("Sheers", "A specialized tool for trimming your plants.", 25 ), Item("Vita-Fertilizer", "Maintains the health of your plants 50% better.", 10), Item("Lavender Seed", "Grows a single lavender plant.", 2)]    #    These aren't actually what the vendor will sell in-game
 gardenSupplyVendor.greeting = "Welcome to Gardener's Delight! I'm Gardener, and I would be delighted to sell you some gardening supplies!"
 gardenSupplyVendor.goodbye = "Come back soon!"
 #gardenSupplyVendor.purchaseMessage = "Enjoy it!"
 
+petStoreVendor = VendorEvent()
+petStoreVendor.vendorItems = [PetEgg("Puppy", "a cute little pet dog", 100, "dog"), PetEgg("Kitten", "a sweet little newborn kitten", 100, "cat"), PetEgg("Gremling", "an odd yet charming little creature", 120, "gremlin"), PetEgg("Rat", "a playful, handsome little rat", 80, "rat"), PetEgg("Alien", "a strange being that looks unline anything you've seen before", 250, "Alien") ]
+petStoreVendor.greeting = "Welcome to my pet store! Please browse what friends we have available, and be open-minded about letting them become a part of your life :)"
+petStoreVendor.goodbye = "See ya around!"
 

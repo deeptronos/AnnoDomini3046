@@ -63,28 +63,31 @@ def createWorld():
    farmersMarketEvent.marketName = "the farmer's market"
    farmersMarketEvent.daysAvailable = ["sunday", "saturday"]
    
-   gardenSupply    = Room("'Gardener's Delight' Garden Supply Emporium")
+   gardenSupply = Room("'Gardener's Delight' Garden Supply Emporium")
    gardenSupply.roomEventTitles = ["vendor"]   #   We can buy stuff in the garden supply
    gardenSupply.roomEvents = [events.gardenSupplyVendor]
    gardenSupply.roomEvents[0].vendorItemCategories = ["crop", "flower"]  #  The garden supply store only sells crops and flowers.
    
-   fieldOffice     = Room("Wasteland Field Office")
+   fieldOffice = Room("Wasteland Field Office")
    fO = FieldOffice("the field office")
    fO.putInRoom(fieldOffice)
    defaultFieldOfficeEvent = events.FieldOfficeEvent(fO)
    fieldOffice.addRoomEvent("field office", defaultFieldOfficeEvent)
+   
+   petStore = Room("Pet Store")
+   petStore.roomEventTitles = ["vendor"]
+   petStore.roomEvents = [events.petStoreVendor]
+
 
    Room.connectRooms(br, "living room",  lr, "bedroom")
    Room.connectRooms(br, "to bed", bed, "out of bed") #   Bed is a "room" that advances the day when you sleep
    Room.connectRooms(lr, "backyard", bY, "living room")
    Room.connectRooms(lr, "outside", outside, "inside")
 
-  
-
    Room.connectRooms(outside, "farmers market", farmersMarket, "home")
    Room.connectRooms(outside, "garden supply", gardenSupply, "home")
    Room.connectRooms(outside, "field office", fieldOffice, "home")
-
+   Room.connectRooms(outside, "pet store", petStore, "home")
    #   The items being created below are mostly just things for testing, and so I've commented them out for now. Sorry for how messy this section is.
 
    #i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
@@ -101,26 +104,26 @@ def createWorld():
    tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
    potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
    #tCP.putInRoom(bY), potato.putInRoom(bY),potato.putInRoom(bY)
-  # dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
-   #dP = dS.becomePlant()
-   #dP2 = dS2.becomePlant()
-   #dP.fullyGrown, dP2.fullyGrown = True, True
+   dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
+   dP = dS.becomePlant()
+   dP2 = dS2.becomePlant()
+   dP.fullyGrown, dP2.fullyGrown = True, True
    
-  # dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
+   dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
    
-   #dCP.loc, dCP2.loc = br, br
+   dCP.loc, dCP2.loc = br, br
   # tF.effect="fertilized"
    #tF.putInRoom(bY)
-   #i = Item("Rock", "This is just a rock.")
-   #i.putInRoom(b)
+   i = Item("Rock", "This is just a rock.")
+   i.putInRoom(br)
    player.location = br
-   #dCP.putInRoom(br), dCP2.putInRoom(br)
-   #player.pickup(dCP), player.pickup(dCP2)
+   dCP.putInRoom(br), dCP2.putInRoom(br)
+   player.pickup(dCP), player.pickup(dCP2)
    #i.putInRoom(br), i.putInRoom(br)
   # player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
    #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
    #player.location = fieldOffice
-   # player.pickup(i), player.pickup(i)    #Pickup two macbooks
+   player.pickup(i)#, player.pickup(i)    #Pickup two macbooks
    #Monster("Bob the monster", 20, b)
    updater.dailyUpdateAll()
 
@@ -163,7 +166,7 @@ def header():
 
     return output
 
-def vendor(event):
+def gsVendor(event):
    player.visitedToday[event] = True   #   Functionality not implemented, ignore this :P
 
    event.vendorItems = seeds[gT.currentSeason]   #   The vendor is selling the current season's seeds
@@ -172,6 +175,36 @@ def vendor(event):
      if i.plantType not in event.vendorItemCategories:
        event.vendorItems.remove(i)
   
+   clear()
+   print(header())
+   print(event.greeting)
+   print("Here's what's for sale:")
+   print()
+   print(visualizeContainer(len(event.greeting), "down"))
+   
+   for i in event.vendorItems:
+     print(i.name,", '" ,i.desc,"' - price: L$", i.value)
+   
+   print(visualizeContainer(len(event.greeting), "up"))
+   print()
+   commandSuccess = False
+   while not commandSuccess:
+     commandSuccess = True
+     command = input("What would you like to do? ('buy [item name]'; 'return') ")
+     commandWords = command.split()
+   
+     if commandWords[0].lower() == "buy":
+         if event.vendorHasItem(command[4:]):
+             item = event.getVendorItemByName(command[4:])
+             bought = player.buy(item)
+             commandSuccess = False
+             
+     elif commandWords[0].lower() == "return":
+         break
+      
+      
+def petVendor(event):
+   
    clear()
    print(header())
    print(event.greeting)
@@ -464,13 +497,51 @@ def accessPet(event):
       if commandWords[0].lower() == "command":  
         print("input: command")
         commandSuccess = False
+        
+      elif commandWords[0].lower() == "feed":
+        foodName = command[5:]
+        food = player.getInventoryItemByName(foodName)
+        
+        if food:
+          if type(food) != CompletedPlant:
+            print("You can't feed that to your pet!")
+            commandSuccess = False
+            continue
+          print("feeding this hoe")
+          feed = event.eventPet.feed()
+          player.items.remove(food)
+          food.loc = None
+          if not feed:  #  If feed() returns false...
+            print("Your pet was already full, but you decided to feed it again anyway...")
+        else:
+          print("Are you sure that's in your inventory?") 
+          commandSuccess = False
+          
+      elif commandWords[0].lower() == "play":
+        play = event.eventPet.play()
+        if not play:
+          print("Your pet is too hungry to play! Try feeding it.")
+          commandSuccess = False
+          
+      elif commandWords[0].lower() == "clean":
+        clean = event.eventPet.clean()
+        if not clean:
+          print("Your doesn't require cleaning right now!")
+          commandSuccess = False
+          
+      elif commandWords[0].lower() == "hug":
+        hug = event.eventPet.hug()
+        if not hug:
+          print("Your doesn't need a hug right now!")
+          commandSuccess = False
+          
       elif commandWords[0].lower() == "die":
         event.eventPet.die()
         #playing = False
       elif commandWords[0].lower() == "return":
         playing = False
-       
-    
+      else:
+        commandSuccess = False
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -702,7 +773,11 @@ while playing and player.alive:
         elif commandWords[0].lower() == "vendor":
             for i in range(len(player.location.roomEventTitles)):
                 if player.location.roomEventTitles[i] == "vendor":
-                    vendor(player.location.roomEvents[i])
+                  if player.location.roomEvents[i] == events.gardenSupplyVendor:
+                    gsVendor(player.location.roomEvents[i])
+                    
+                  elif player.location.roomEvents[i] == events.petStoreVendor:
+                    petVendor(player.location.roomEvents[i])
 
         elif commandWords[0].lower() == "sleep":
             for i in range(len(player.location.roomEventTitles)):
@@ -765,6 +840,9 @@ while playing and player.alive:
             player.location.addRoomEvent("pet", petEvent)
             pet.loc = player.location
             pet.myRoomEvent = petEvent
+            
+            player.items.remove(target)
+            target.loc = None
             
         elif commandWords[0].lower() == "pet":
           for i in range(len(player.location.roomEventTitles)):

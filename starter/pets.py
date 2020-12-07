@@ -6,6 +6,8 @@ import updater
 import random
 import os
 
+#	TODO: add value calculation; add some way to sell pets?
+
 class PetFood(Item):
 	def __init__(self, name, desc, value):
 		super().__init__(name, desc, value)
@@ -77,14 +79,17 @@ class Pet():
 			self.happiness = 1	#	Happiness is set to lowest each day while baby
 			stomachDecrement = 2
 			self.bathroom = 5	#	Bathroom is set to highest each day while baby
+			connectionDecrement = 0
 		elif self.stages[self.currentStage] == "teen":	#	Teen
 			healthDecrement = 1
 			happinessDecrement = 1
 			stomachDecrement = 2
+			connectionDecrement = 2
 		elif self.stages[self.currentStage] == "adult":	#	Adult
 			healthDecrement = 1
 			happinessDecrement = 1
 			stomachDecrement = 1
+			connectionDecrement = 1
 			
 		if self.health > healthDecrement:
 			self.health -= healthDecrement
@@ -96,6 +101,10 @@ class Pet():
 			self.stomach -= stomachDecrement
 		else:
 			self.stomach = 1
+		
+		if self.connection > connectionDecrement:
+			self.connection -= connectionDecrement
+		
 		if self.stages[self.currentStage] != "baby":
 			if self.happiness > happinessDecrement:
 				self.happiness -= happinessDecrement
@@ -103,6 +112,7 @@ class Pet():
 	def checkStrikes(self):
 		if self.overfed == True:
 			self.strikes += 1
+			self.connection -= 1
 			
 		if self.happiness == 5 and self.bathroom == 1 and self.stomach >= 4:
 			if self.strikes > 0:
@@ -156,7 +166,8 @@ class Pet():
 		self.loc.removeRoomEvent("pet", self.myRoomEvent)
 		updater.dailyUpdateDeregister(self)
 		self.loc = None
-			
+		print
+		
 	def feed(self):
 		if self.stomach < 5:
 			self.stomach += 1	#	Increase stomach
@@ -166,12 +177,14 @@ class Pet():
 				
 			if self.happiness < 5 and self.stomach > 3:	#	Increase happiness
 				self.happiness += 1
-				
+			return True	
+			
 		elif self.stomach == 5:	
 			self.overfed = True
 			
 			if self.health > 1:	#	Decrease health
 				self.health -= 1
+			return False
 			
 	def play(self):
 		if self.stomach > 1:	#	Decrease stomach
@@ -185,16 +198,21 @@ class Pet():
 		if self.connection < 5:	#	Increase connection
 			self.connection += 1
 			
+		if self.bathroom < 5:
+			self.bathroom += 1
+			
+		return True
 	def clean(self):
 		if self.bathroom > 1:
 			
 			if self.bathroom > 3 and self.happiness < 5:	#	Increase happiness if cleaned while dirty
-				self.happinessiness += 1
+				self.happiness += 1
 				
 			if self.overfed == True:
 				self.overfed = False
 				
 			self.bathroom = 1
+			return True
 		else:	#	Cannot clean if pet doesn't need cleaning
 			return False
 	
@@ -208,7 +226,6 @@ class Pet():
 					
 			else:	#	It pet is not a baby...
 				self.happiness += 0.5
-				
-	
+			return True
 		else:	#	Cannot hug if happiness is full
 			return False
