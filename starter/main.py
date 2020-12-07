@@ -97,9 +97,8 @@ def createWorld():
    #h.healthRestore = 100
    #h.putInRoom(lr)
    #tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 1, 5, 25, 2)    #    test Seed
-   # tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2)
-       #   Seed init: def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic=False):
-  # tS.putInRoom(bY),tS.putInRoom(bY),tS.putInRoom(bY)
+   tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2, False, "crop")
+   tS.putInRoom(br),tS.putInRoom(br),tS.putInRoom(br)
   # tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer  #  Fertilizer is not implemented
    tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
    potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
@@ -120,7 +119,7 @@ def createWorld():
    dCP.putInRoom(br), dCP2.putInRoom(br)
    player.pickup(dCP), player.pickup(dCP2)
    #i.putInRoom(br), i.putInRoom(br)
-  # player.pickup(tS), player.pickup(tS), player.pickup(tS), player.pickup(tF)
+   player.pickup(tS), player.pickup(tS), player.pickup(tS)
    #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
    #player.location = fieldOffice
    player.pickup(i)#, player.pickup(i)    #Pickup two macbooks
@@ -343,13 +342,14 @@ def accessFarmersMarket(event):
         print(header())
         print("Welcome to " + event.marketName +"!")
         print("Ready to sell your goods? Here's what you've got that'll sell here:")
-        sellableGoods = player.returnSellableMarketGoods([CompletedPlant], ["crop", "flower", "test"])
+        sellableGoods = stackItemList(player.returnSellableMarketGoods([CompletedPlant], ["crop", "flower", "test"]))
         for i in sellableGoods:
-           print(i)
+           print("    * " + i)
+           
         if event.sellerItemsList != []:
            print("Here's what you're currently planning to sell:")
            stackedSellItems = stackItemList(event.sellerItemsList)
-           for i in stackedSellItems: print(i)
+           for i in stackedSellItems: print("    * " + i)
         
         commandSuccess = False
         while not commandSuccess:
@@ -547,16 +547,20 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def stackItemList(inList):
-   returnList, countedItems = [], []
-   for i in inList:
-      if i not in countedItems:
-         countedItems.append(i)
-         count = str(inList.count(i))
-         displayStr = i.name
-         displayStr += (' x' + count)
-         returnList.append(displayStr)
-   
-   return returnList
+  returnList, itemNames, countedItemNames = [], [], []
+  
+  for i in inList:
+      itemNames.append(i.name)
+  
+  for i in inList:
+      if i.name not in countedItemNames:
+          count = str(itemNames.count(i.name))
+          displayStr = i.name
+          displayStr += (" x" + count)
+          returnList.append(displayStr)
+          countedItemNames.append(i.name) 
+          
+  return returnList
    
 {"crop":[], "flower":[], "illicit":[], "rare":[], 'test':[]}
 

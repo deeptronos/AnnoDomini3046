@@ -81,16 +81,33 @@ class Player:
         print("It is currently located in ", loc,".", sep='' )
         print()
         input("Press enter to continue...")
-
+        
+    def stackItemList(inList):
+           returnList, countedItems = [], []
+           for i in inList:
+              if i not in countedItems:
+                 
+                 count = str(inList.count(i))
+                 displayStr = i.name
+                 displayStr += (' x' + count)
+                 returnList.append(displayStr)
+                 countedItems.append(i)
+           
+           return returnList
+           
     def showInventory(self):
-        inventoryDisplayList, countedItems = [], []
+        inventoryDisplayList, itemNames, countedItemNames = [], [], []
+        
         for i in self.items:
-            if i not in countedItems:
-                count = str(self.items.count(i))
+            itemNames.append(i.name)
+        
+        for i in self.items:
+            if i.name not in countedItemNames:
+                count = str(itemNames.count(i.name))
                 displayStr = i.name
-                displayStr += ( " x" + count)
+                displayStr += (" x" + count)
                 inventoryDisplayList.append(displayStr)
-                countedItems.append(i)
+                countedItemNames.append(i.name)
         clear()
         print("You are currently carrying:")
         print()
@@ -101,15 +118,17 @@ class Player:
         input("Press enter to continue...")
         
     def returnSellableMarketGoods(self, goodClasses, goodTypes):
-        returnList, countedItems = [], []
+        #returnList, countedItems = [], []
+        returnList = []
         for i in self.items:
-            if i not in countedItems and type(i) in goodClasses and i.type in goodTypes:    #    Yes, type(i) and i.type are entirely different things, but their naming sorta makes sense. type(i) is the class of the item i, and i.type is the property of item i that defines what type of plant it is.
+            if type(i) in goodClasses and i.type in goodTypes:    #    Yes, type(i) and i.type are entirely different things, but their naming sorta makes sense. type(i) is the class of the item i, and i.type is the property of item i that defines what type of plant it is.
                 
-                count = str(self.items.count(i))
-                displayStr = i.name
-                displayStr += ( " x" + count)
-                returnList.append(displayStr)
-                countedItems.append(i)
+                # count = str(self.items.count(i))
+                # displayStr = i.name
+                # displayStr += ( " x" + count)
+                #returnList.append(displayStr)
+                returnList.append(i)
+                #countedItems.append(i)
                 
         return returnList
         
