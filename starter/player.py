@@ -60,7 +60,7 @@ class Player:
     def getMultipleInventoryItemsByName(self, name):    #    Get a list of items from your inventory by their shared name
         returnList = []
         for i in self.items:
-            if i.name.lower() == name.lower():
+            if i.name.lower().strip() == name.lower().strip():
                 returnList.append(i)  
                 
         if returnList != []:
@@ -82,18 +82,18 @@ class Player:
         print()
         input("Press enter to continue...")
         
-    def stackItemList(inList):
-           returnList, countedItems = [], []
-           for i in inList:
-              if i not in countedItems:
-                 
-                 count = str(inList.count(i))
-                 displayStr = i.name
-                 displayStr += (' x' + count)
-                 returnList.append(displayStr)
-                 countedItems.append(i)
-           
-           return returnList
+    # def stackItemList(inList):
+    #        returnList, countedItems = [], []
+    #        for i in inList:
+    #           if i not in countedItems:
+    #              
+    #              count = str(inList.count(i))
+    #              displayStr = i.name
+    #              displayStr += (' x' + count)
+    #              returnList.append(displayStr)
+    #              countedItems.append(i)
+    #        
+    #        return returnList
            
     def showInventory(self):
         inventoryDisplayList, itemNames, countedItemNames = [], [], []

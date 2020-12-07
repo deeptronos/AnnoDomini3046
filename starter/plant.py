@@ -36,7 +36,7 @@ class Seed(Item):	#	Making a seed item
 				
 			return returnStr
 			
-		plantName = nameProcess(self.name)
+		plantName = nameProcess(self.name).strip()
 		
 		plant = Plant(plantName, self.growthDuration, self.price, self.plantPrice, self.radiation, self.exotic, self.plantType)
 		return plant
@@ -94,7 +94,7 @@ class Plant:
 		
 	def grow(self):
 		if self.watered and not self.fullyGrown:
-			if self.age < self.growthDuration:
+			if self.age < self.growthDuration - 1:
 				self.age += 1
 			else:
 				self.fullyGrown = True

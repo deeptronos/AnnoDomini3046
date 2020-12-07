@@ -11,7 +11,7 @@
 				"plantName":"Tomato", "desc":"a gross little mean little vegetable.", "value":0, "growthDuration":4, "seedPrice":1.5, "plantPrice":3, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
 			},
 			"spryngradish": {
-				"plantName":"Spryng Radish", "desc":"a crunchy, tasty root vegetable that flourishes in the spryngtyme.", "value":0, "growthDuration":4, "seedPrice":2, "plantPrice":5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+				"plantName":"Spryng Radish", "desc":"a crunchy, tasty root vegetable that flourishes in the spryngtyme.", "value":0, "growthDuration":1, "seedPrice":2, "plantPrice":5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
 			},
 			"otomradish": {
 				"plantName":"Otom Radish", "desc":"a crunchy, hardy root vegetable that will still thrive in Otom.", "value":0, "growthDuration":4, "seedPrice":2.5, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
