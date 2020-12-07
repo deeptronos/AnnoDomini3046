@@ -104,6 +104,7 @@ def createWorld():
    potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
    #tCP.putInRoom(bY), potato.putInRoom(bY),potato.putInRoom(bY)
    dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
+   #def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic, plantType):
    dP = dS.becomePlant()
    dP2 = dS2.becomePlant()
    dP.fullyGrown, dP2.fullyGrown = True, True
@@ -117,7 +118,7 @@ def createWorld():
    i.putInRoom(br)
    player.location = br
    dCP.putInRoom(br), dCP2.putInRoom(br)
-   player.pickup(dCP), player.pickup(dCP2)
+   player.pickup(dCP), player.pickup(dCP2)  #  Giving player completed demo plants
    #i.putInRoom(br), i.putInRoom(br)
    player.pickup(tS), player.pickup(tS), player.pickup(tS)
    #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
@@ -360,6 +361,7 @@ def accessFarmersMarket(event):
            print("Here's what you're currently planning to sell:")
            stackedSellItems = stackItemList(event.sellerItemsList)
            for i in stackedSellItems: print("    * " + i)
+           print("  Estimated total revenue: L$ "+ str(event.returnListedItemsTotalValue()))
         
         commandSuccess = False
         while not commandSuccess:

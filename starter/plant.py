@@ -107,7 +107,8 @@ class Plant:
 		
 	def returnCompletedPlant(self):
 		if self.fullyGrown:
-			return CompletedPlant(self.name, "test desc", self.price, self.currentGrade, self.plantType)
+			#return CompletedPlant(self.name, "test desc", self.price, self.currentGrade, self.plantType)
+			return CompletedPlant(self.name, "test desc", self.plantMaxValue, self.currentGrade, self.plantType)
 		return False
 	
 class CompletedPlant(Item):

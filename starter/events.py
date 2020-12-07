@@ -66,6 +66,13 @@ class MarketEvent(Event):
     def addOnToSellerItemsList(self, item):
         self.sellerItemsList.append(item)
         
+    def returnListedItemsTotalValue(self):
+        returnVal = 0
+        for i in self.sellerItemsList:
+            returnVal += i.value
+            
+        return returnVal
+        
     def finalizeSellerItems(self):
         for i in self.sellerItemsList:
             self.sellerItems[i.type].append(i)    #    Add each item the player wants to sell to their respective type-category in the sellerItems dict, based on the "type" property of the item
