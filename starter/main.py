@@ -127,7 +127,7 @@ def createWorld():
    #Monster("Bob the monster", 20, b)
    updater.dailyUpdateAll()
    
-   player.location = br
+   player.location = gardenSupply
 
 
 def header():
@@ -172,18 +172,21 @@ def gsVendor(event):
    player.visitedToday[event] = True   #   Functionality not implemented, ignore this :P
    wDim = os.get_terminal_size()[0]
    event.vendorItems = seeds[gT.currentSeason]   #   The vendor is selling the current season's seeds
-  
-   for i in event.vendorItems:  #  Remove anything from vendorItems that isn't in the allowed categories as designated by event.vendorItemCategories
-     if i.plantType not in event.vendorItemCategories:
-       event.vendorItems.remove(i)
-  
+   sanitizedVendorItems = []
+   
+   for i in event.vendorItems:  #  Loop to make a new list with items that don't have the same category as the vendor's vendorItemCategories removed
+     if i.plantType  in event.vendorItemCategories:
+       sanitizedVendorItems.append(i)
+       
+   event.vendorItems = sanitizedVendorItems
+   
    clear()
    print(header())
    print(event.greeting)
    print("Here's what's for sale:")
    print()
    print(visualizeContainer(wDim, "down"))
-   print(" (<plant name> , <description>, <growth duration>, <price>)")
+   print(" (<plant name> , <description>, <growth duration> - <price>)")
    for i in event.vendorItems:
      print(" " + i.name.strip() + ", '" + i.desc.strip() + "', " + str(i.growthDuration) + " days - L$" + str(i.value))
    
@@ -194,7 +197,9 @@ def gsVendor(event):
      commandSuccess = True
      command = input("What would you like to do? ('buy <item name>'; 'return') ")
      commandWords = command.split()
-   
+     if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
+      commandWords = ["nothing"]
+      
      if commandWords[0].lower() == "buy":
          vendorHasItem = event.vendorHasItem(command[4:])
          if vendorHasItem:
@@ -202,7 +207,6 @@ def gsVendor(event):
            
            bought = player.buy(item)
            if not bought:
-             print("You don't have the funds for that!")
              commandSuccess = False
              continue
          else:
@@ -238,7 +242,10 @@ def petVendor(event):
      commandSuccess = True
      command = input("What would you like to do? ('buy <item name>'; 'return') ")
      commandWords = command.split()
-   
+     
+     if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
+      commandWords = ["nothing"]
+      
      if commandWords[0].lower() == "buy":
          if event.vendorHasItem(command[4:]):
              item = event.getVendorItemByName(command[4:])
@@ -789,6 +796,7 @@ def showHelp():
     print("    * Accessing the Field Office lets you fund bounty hunters, who'll try to find rare, extremely valuable seeds for you in return.")
     print("    * Don't forget to regularlywater anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
     print("    * Make sure you type item names and commands correctly!")
+    print("    * Generally, plants will sell for much more L$ than you bought their seeds for.")
     print("    * Go outside of your home to access many cool places!")
     print("    * A new, different bounty hunter is available every day at the Field Office!")
     print("    * You must go to bed for anything in your garden to grow.")
