@@ -88,6 +88,7 @@ def createWorld():
    Room.connectRooms(outside, "garden supply", gardenSupply, "home")
    Room.connectRooms(outside, "field office", fieldOffice, "home")
    Room.connectRooms(outside, "pet store", petStore, "home")
+   
    #   The items being created below are mostly just things for testing, and so I've commented them out for now. Sorry for how messy this section is.
 
    #i = Item("Macbook", "This is your 3019 16-Inch Macbook Oh.")
@@ -97,37 +98,37 @@ def createWorld():
    #h.healthRestore = 100
    #h.putInRoom(lr)
    #tS = Seed("test seed", "Seeds that grow into a beautiful hydrangea plant", 1, 1, 5, 25, 2)    #    test Seed
-   tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2, False, "crop")
-   tS.putInRoom(br),tS.putInRoom(br),tS.putInRoom(br)
+   # tS = Seed("Panicled Hydrangea Seed", "Seeds that grow into a beautiful hydrangea plant", 1, 15, 5, 25, 2, False, "crop")
+   # tS.putInRoom(br),tS.putInRoom(br),tS.putInRoom(br)
   # tF = DirtPlotEffector("Fertilizer", "Makes the amount of time required for a seed to grow 2/3rds of its original duration!", 10)   #   test Fertilizer  #  Fertilizer is not implemented
-   tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
-   potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
+   # tCP = CompletedPlant("Test", "test description", 25, 3, "test")  #   test CompletedPlant
+   # potato = CompletedPlant("Potato", "A beautiful delicious potato", 5, 0, "crop")  #   testing potato
    #tCP.putInRoom(bY), potato.putInRoom(bY),potato.putInRoom(bY)
-   dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
+   # dS, dS2 = Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop"),Seed("demo seed", "grows quick", 1, 1, 2.5, 7.5, 0,False,"crop")
    #def __init__(self, name, desc, value, growthDuration, price, plantPrice, radiation, exotic, plantType):
-   dP = dS.becomePlant()
-   dP2 = dS2.becomePlant()
-   dP.fullyGrown, dP2.fullyGrown = True, True
-   
-   dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
-   
-   dCP.loc, dCP2.loc = br, br
-  # tF.effect="fertilized"retu
+   # dP = dS.becomePlant()
+   # dP2 = dS2.becomePlant()
+   # dP.fullyGrown, dP2.fullyGrown = True, True
+   # 
+  #  dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
+  #  
+  #  dCP.loc, dCP2.loc = br, br
+   # tF.effect="fertilized"retu
    #tF.putInRoom(bY)
-   i = Item("Rock", "This is just a rock.")
-   i.putInRoom(br)
+   # i = Item("Rock", "This is just a rock.")
+   # i.putInRoom(br)
    player.location = br
-   dCP.putInRoom(br), dCP2.putInRoom(br)
-   player.pickup(dCP), player.pickup(dCP2)  #  Giving player completed demo plants
-   #i.putInRoom(br), i.putInRoom(br)
-   player.pickup(tS), player.pickup(tS), player.pickup(tS)
-   #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
-   #player.location = fieldOffice
-   player.pickup(i)#, player.pickup(i)    #Pickup two macbooks
+   # dCP.putInRoom(br), dCP2.putInRoom(br)
+   # player.pickup(dCP), player.pickup(dCP2)  #  Giving player completed demo plants
+   # #i.putInRoom(br), i.putInRoom(br)
+   # player.pickup(tS), player.pickup(tS), player.pickup(tS)
+   # #player.pickup(tCP), player.pickup(potato),player.pickup(potato)
+   # #player.location = fieldOffice
+   # player.pickup(i)#, player.pickup(i)    #Pickup two macbooks
    #Monster("Bob the monster", 20, b)
    updater.dailyUpdateAll()
    
-   player.location = gardenSupply
+   player.location = br
 
 
 def header():
@@ -747,7 +748,7 @@ def printSituation():
     clear()
     print(header())
     if player.firstTime:
-      print("Welcome to Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)!\nThe date is displayed in the above left corner, and your Linden Dollars are displayed in the top right corner.\nToday, try going to Gardener's Supply and buying some seeds to plant in your garden!\nOnce you've grown and harvested plants, go to the farmer's market to sell them!\nType 'help' in the prompt to see your commands, and for some more helpful beginner tips!\nHave a good time.\n")
+      print("Welcome to Anno Domini 3049: Newcomer Gardening Exhibition (Radiation Hell Fantasy)!\nThe date is displayed in the above left corner, and your Linden Dollars are displayed in the top right corner.\nToday, try going to Gardener's Supply and buying some seeds to plant in your garden!\nOnce you've grown and harvested plants, go to the farmer's market to sell them!\n\nType 'help' in the prompt to see your commands, and for some more helpful beginner tips!\n Make sure to read them, as they have important info about how to play the game.\nHave a good time!\n")
       player.firstTime = False
     
     print(player.location.desc)
@@ -783,7 +784,7 @@ def showHelp():
     print("garden -- In areas that contain a garden, use this to access it.")
     print("market -- In areas that contain a market, use this to start selling your goods.")
     print("field office -- In  areas that contain a field office, use this to access it.")
-    print("pet -- In  areas that contain a pet, use this to access it.")
+    print("pet -- In areas that contain a pet, use this to access it.")
     print("wait -- Wait a cycle.")
     print("heal <item> -- Uses a healing <item> from your inventory to increase your health. Be mindful - they're often single use.")
     print("inspect <item> -- Inspect an <item>.")
@@ -791,17 +792,18 @@ def showHelp():
     print("me -- See the current state of your stats and Linden Dollars.")
     print()
     print("Gamer's Tips:")
+    print("    * Go to your bedroom to find your bed, where you can sleep and advance the date.")
     print("    * The farmer's market is only open on weekends - Saturday and Sunday.")
     print("    * Go to your backyard, from your living room, to access your garden!")
     print("    * Accessing the Field Office lets you fund bounty hunters, who'll try to find rare, extremely valuable seeds for you in return.")
-    print("    * Don't forget to regularlywater anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
+    print("    * Don't forget to regularly water anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
     print("    * Make sure you type item names and commands correctly!")
     print("    * Generally, plants will sell for much more L$ than you bought their seeds for.")
     print("    * Go outside of your home to access many cool places!")
     print("    * A new, different bounty hunter is available every day at the Field Office!")
-    print("    * You must go to bed for anything in your garden to grow.")
+    print("    * You must sleep for anything in your garden to grow.")
     print("    * Go to the pet store to purchase a pet egg!")
-    print("    * You cannot currently save your game. You are dust, so once you terminate the program - or exit the main game loop somehow - to dust you will return.")
+    print("    * You cannot save your game. You are dust, so once you terminate the program - or exit the main game loop somehow - to dust you will return.")
     print("    * There are two 45-day seasons, Spryng and Otom, each with their own unique plants that can be grown during them.")
     print("    * Return to this screen as often as you'd like! These tips are here to be referenced throughout the game.")
     print()
