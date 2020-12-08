@@ -112,7 +112,7 @@ def createWorld():
    dCP, dCP2 = dP.returnCompletedPlant(), dP2.returnCompletedPlant()
    
    dCP.loc, dCP2.loc = br, br
-  # tF.effect="fertilized"
+  # tF.effect="fertilized"retu
    #tF.putInRoom(bY)
    i = Item("Rock", "This is just a rock.")
    i.putInRoom(br)
@@ -126,6 +126,8 @@ def createWorld():
    player.pickup(i)#, player.pickup(i)    #Pickup two macbooks
    #Monster("Bob the monster", 20, b)
    updater.dailyUpdateAll()
+   
+   player.location = br
 
 
 def header():
@@ -168,7 +170,7 @@ def header():
 
 def gsVendor(event):
    player.visitedToday[event] = True   #   Functionality not implemented, ignore this :P
-
+   wDim = os.get_terminal_size()[0]
    event.vendorItems = seeds[gT.currentSeason]   #   The vendor is selling the current season's seeds
   
    for i in event.vendorItems:  #  Remove anything from vendorItems that isn't in the allowed categories as designated by event.vendorItemCategories
@@ -180,17 +182,17 @@ def gsVendor(event):
    print(event.greeting)
    print("Here's what's for sale:")
    print()
-   print(visualizeContainer(len(event.greeting), "down"))
-   
+   print(visualizeContainer(wDim, "down"))
+   print(" (<plant name> , <description>, <growth duration>, <price>)")
    for i in event.vendorItems:
-     print(i.name,", '" ,i.desc,"' - price: L$", i.value)
+     print(" " + i.name.strip() + ", '" + i.desc.strip() + "', " + str(i.growthDuration) + " days - L$" + str(i.value))
    
-   print(visualizeContainer(len(event.greeting), "up"))
+   print(visualizeContainer(wDim, "up"))
    print()
    commandSuccess = False
    while not commandSuccess:
      commandSuccess = True
-     command = input("What would you like to do? ('buy [item name]'; 'return') ")
+     command = input("What would you like to do? ('buy <item name>'; 'return') ")
      commandWords = command.split()
    
      if commandWords[0].lower() == "buy":
@@ -199,46 +201,60 @@ def gsVendor(event):
            item = event.getVendorItemByName(command[4:])
            
            bought = player.buy(item)
-           
+           if not bought:
+             print("You don't have the funds for that!")
+             commandSuccess = False
+             continue
          else:
            print("That item isn't available for purchase!")
            
          commandSuccess = False
      elif commandWords[0].lower() == "return":
          break
+     else:
+         commandSuccess = False
+         continue
       
       
 def petVendor(event):
-   
+   wDim = os.get_terminal_size()[0]
    clear()
    print(header())
    print(event.greeting)
+   print()
+   print("Gamer's Tips: \n    * In order to have your pet, you must use 'hatch <egg item name>' in the location which you want to become the pet's home. Be wise when hatching your pet, as you'll have to access it wherever you hatch it for as long as it's your pet!\n    * You can purchase pet food here to feed your pet, but you can also feed it anything you grow in your garden!")
+   print()
    print("Here's what's for sale:")
    print()
-   print(visualizeContainer(len(event.greeting), "down"))
-   
+   print(visualizeContainer(wDim, "down"))
+   print(" (<pet type> , <pet description>, <price>)")
    for i in event.vendorItems:
-     print(i.name,", '" ,i.desc,"' - price: L$", i.value)
+     print(" " + i.name + ", '" + i.desc + "' - L$" + str(i.value))
    
-   print(visualizeContainer(len(event.greeting), "up"))
+   print(visualizeContainer(wDim, "up"))
    print()
    commandSuccess = False
    while not commandSuccess:
      commandSuccess = True
-     command = input("What would you like to do? ('buy [item name]'; 'return') ")
+     command = input("What would you like to do? ('buy <item name>'; 'return') ")
      commandWords = command.split()
    
      if commandWords[0].lower() == "buy":
          if event.vendorHasItem(command[4:]):
              item = event.getVendorItemByName(command[4:])
              bought = player.buy(item)
-             
+             #if not bought:
+               #print("You don't have the funds for that!")
+               
          else:
            print("That isn't available for purchase!")
-           commandSuccess = False
+         commandSuccess = False
            
      elif commandWords[0].lower() == "return":
          break
+     else:
+       commandSuccess = False
+       continue
       
 
 def accessGarden(event):
@@ -250,7 +266,7 @@ def accessGarden(event):
       commandSuccess = False
       while not commandSuccess:
          commandSuccess = True
-         command = input("What would you like to do? ('plant [seed name]'; 'check #'; 'water #'; 'harvest #'; 'return') ")
+         command = input("What would you like to do? ('plant [seed name]'; 'check #'; 'water #'; 'harvest #'; 'inventory'; 'help'; 'return') ")
          commandWords = command.split()
          
          if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
@@ -341,6 +357,23 @@ def accessGarden(event):
                player.items.append(harvested)    #   If harvestPlot() isn't False, harvested will be be a CompletedPlant item.
                #player.pickup(harvested)  
                commandSuccess = True
+         elif commandWords[0].lower() == "inventory":
+           player.showInventory()
+         elif commandWords[0].lower() == "help":
+           clear()
+           print("plant <seed> -- plants the designated seed from your inventory in the first available plot")
+           print("check <number> -- displays information about the plot specified by the <number>")
+           print("water <number> -- waters the plot specified by the <number>")
+           print("harvest <number> -- if the plant in the plot specified by <number> is fully grown, it is harvested and added to your inventory")
+           print("inventory -- opens your inventory")
+           print("return -- exits the garden interaction")
+           print()
+           print("Gamer's Tips:")
+           print("    * Once harvested, plants can be sold at the Farmer's Market on weekends for a handsome profit,\n but they can also be used as food for your pet!")
+           print("    * You'll know if you've already watered a plant for the day if a '(W)' appears next to its name in the garden display.")
+           print("    * The most important part of being a successful gardener is taking good care of your plants!\n That means consistantly watering them every day.")
+           input("Press enter to continue...")
+           #commandSuccess = False
          elif commandWords[0].lower() == "return":   #   Is there a way to just make code to navigate back to the main loop, which doesn't require two inputs from the player? Ie, a way to have the player just type "back" to return, instead of "back" and using an input prompt to return
             #   Basically, I'm wondering how to do what the input prompt is doing (returning us to the main loop) without actually making the code use an input()?
             #input("Press enter to continue...")
@@ -374,7 +407,7 @@ def accessFarmersMarket(event):
         commandSuccess = False
         while not commandSuccess:
            commandSuccess
-           command = input("What would you like to do? (Commands: 'sell [item name]'; 'check'; 'clear'; 'finalize'; 'return') ")
+           command = input("What would you like to do? (Commands: 'sell [item name]'; 'clear'; 'finalize'; 'help'; 'return') ")
            commandWords = command.split()
            if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
              commandWords = ["nothing"]
@@ -416,6 +449,18 @@ def accessFarmersMarket(event):
               event.sellerItems = {"crop":[], "flower":[], "illicit":[], "rare":[], 'test':[]}   #   organized by plant type
               commandSuccess = True
               
+           elif commandWords[0].lower() == "help":
+             clear()
+             print("sell <item name> -- marks the item(s) in your inventory with that name for sale")
+             print("clear -- returns any items you've marked for sale to your inventory")
+             print("finalize -- sells any items you have listed for sale")
+             print("return -- exits the farmer's market interaction")
+             print()
+             print("Gamer's Tips:")
+             print("    * Remember, the farmer's market is only open on weekends, so plan your gardening accordingly!")
+             print("    * While selling your harvested plants may be an appealing idea, remember that you're able to feed your pet with them too.")
+             input("Press enter to continue...")  
+             
            elif commandWords[0].lower() == "return":   #   Return out of the "market" sub-menu
               if event.sellerItemsList != []:   #   Player cannot leave the market unless they aren't selling anything
                  print("Wait! You still have items marked for sale. Please 'clear' them to exit the market.")
@@ -451,7 +496,7 @@ def accessFieldOffice(event):
       commandSuccess = False
       while not commandSuccess:
          commandSuccess = True
-         command = input("What would you like to do? ('put up [L$#]'; 'return') ")
+         command = input("What would you like to do? ('put up [L$#]'; 'help'; 'return') ")
          commandWords = command.split()
          
          if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
@@ -484,6 +529,8 @@ def accessFieldOffice(event):
                     elif commandWords[0].lower() == "n":
                        event.eventFieldOffice.cancelWager()
                        print("Hunt cancelled.")
+                    else:
+                      commandSuccess = False
               else:
                  print()
                  print(" 'Sorry pal, you dont have that kinda cash! Come back when you've got what it takes to make this happen.'")
@@ -493,8 +540,17 @@ def accessFieldOffice(event):
               print("  'No hunter'll get outta bed for that kinda money! Make it worth my while, scumbag!'")
             
             commandSuccess = False
-            
-         elif commandWords[0].lower() == "return":
+         
+         elif commandWords[0].lower() == "help":
+            clear()
+            print("put up <number> -- offers the bounty hunter the amount of Lindens as specified by <number>")
+            print("return -- exits the field office interaction")
+            print()
+            print("Gamer's Tips:")
+            print("    * Don't feel obligated to use the field office, or to hire a bounty hunter! You have the possibility of a lavish reward... but hunters nevery guarantee their clients a return for a reason.")
+            print("    * It isn't reccomended to hire hunters that aren't 'reliable' or 'pure-hearted', as any other type of hunter has a chance of taking anything they find for themselves!")
+            input("Press enter to continue...")  
+         elif commandWords[0].lower() == "return": 
             playing = False
          else:
             commandSuccess = False
@@ -508,7 +564,7 @@ def accessPet(event):
     commandSuccess = False
     while not commandSuccess:
       commandSuccess = True
-      command = input("What would you like to do? ")
+      command = input("What would you like to do? ('feed <itemname>'; 'play'; 'clean'; 'hug'; 'help'; 'return')")
       commandWords = command.split()
        
       if commandWords == []:   #   Allows us to have multi-word directions without causing an index error (yes this is a dumb way to do this but ummmmmmmmm)
@@ -558,6 +614,45 @@ def accessPet(event):
       elif commandWords[0].lower() == "die":
         event.eventPet.die()
         #playing = False
+      elif commandWords[0].lower() == "sell":
+         commandSuccess = False
+         while not commandSuccess:
+            commandSuccess = True
+            command = input("Are you sure you'd like to get rid of " + event.eventPet.name.capitalize() + "? ('y'/'n')")
+            commandWords = command.split()
+            if commandWords == []:   #   Allows us to have multi-word directions without causing an index error
+               commandWords = ["nothing"]
+               
+            elif commandWords[0].lower() == "y" or commandWords[0].lower() == "yes":
+              sellVal = event.eventPet.value
+              pet.die()
+              player.lindenDollars += sellVal
+              print("You listed " + event.eventPet.name.capitalize() +" for sale on eBay, and they sold for L$" + str(sellVal))
+              input("Press enter to continue...")
+              playing = False
+              break
+            elif commandWords[0].lower() == "n":
+               event.eventFieldOffice.cancelWager()
+               print("Sale cancelled :)")
+            else:
+              commandSuccess = False
+      elif commandWords[0].lower() == "help":
+        clear()
+        print("feed <item> -- feeds your pet the designated <item>, so long as it's an edible item (a plant of some sort, or pet food)")
+        print("play -- plays with your pet")
+        print("clean -- cleans your pet, and lets your pet go to the bathroom")
+        print("hug -- gives your pet a hug")
+        print("return -- exits the pet interaction")
+        print()
+        print("Gamer's Tips:")
+        print("    * A pet has three ages, during each of which it will react differently to your interactions,\n and will behave differently as well. For instance,\n a younger pet will appreciate hugs more than an older one.")
+        print("    * Make sure you 'clean' your pet often, especially if you've fed it recently!")
+        print("    * Though it's difficult, your pet can die! Make sure you feed it every day, and that you keep its 'health'\n stat high")
+        print("    * Don't overfeed your pet! It's possible to do so, and that won't end well")
+        print("    * If you don't feel up to caring for your special friend, use the 'sell' command to sell them :(")
+        print("    * You can feed your pet with plants you've grown and harvested from your garden, or with pet food purchased from the pet store")
+        input("Press enter to continue...")  
+        
       elif commandWords[0].lower() == "return":
         playing = False
       else:
@@ -681,21 +776,23 @@ def showHelp():
     print("garden -- In areas that contain a garden, use this to access it.")
     print("market -- In areas that contain a market, use this to start selling your goods.")
     print("field office -- In  areas that contain a field office, use this to access it.")
+    print("pet -- In  areas that contain a pet, use this to access it.")
     print("wait -- Wait a cycle.")
     print("heal <item> -- Uses a healing <item> from your inventory to increase your health. Be mindful - they're often single use.")
     print("inspect <item> -- Inspect an <item>.")
+    print("hatch <item> -- Hatch the designated egg.")
     print("me -- See the current state of your stats and Linden Dollars.")
     print()
     print("Gamer's Tips:")
     print("    * The farmer's market is only open on weekends - Saturday and Sunday.")
     print("    * Go to your backyard, from your living room, to access your garden!")
     print("    * Accessing the Field Office lets you fund bounty hunters, who'll try to find rare, extremely valuable seeds for you in return.")
-    print("    * Don't forget to water anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
+    print("    * Don't forget to regularlywater anything you grow in your garden! It's spectacularly important for producing a lovely plant.")
     print("    * Make sure you type item names and commands correctly!")
     print("    * Go outside of your home to access many cool places!")
     print("    * A new, different bounty hunter is available every day at the Field Office!")
     print("    * You must go to bed for anything in your garden to grow.")
-    print("    * Your health stat doesn't really matter much in this game.")
+    print("    * Go to the pet store to purchase a pet egg!")
     print("    * You cannot currently save your game. You are dust, so once you terminate the program - or exit the main game loop somehow - to dust you will return.")
     print("    * There are two 45-day seasons, Spryng and Otom, each with their own unique plants that can be grown during them.")
     print("    * Return to this screen as often as you'd like! These tips are here to be referenced throughout the game.")
@@ -867,6 +964,9 @@ while playing and player.alive:
             
             player.items.remove(target)
             target.loc = None
+          else:
+            print("You can't do that.")
+            commandSuccess = False
             
         elif commandWords[0].lower() == "pet":
           for i in range(len(player.location.roomEventTitles)):

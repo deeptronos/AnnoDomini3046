@@ -114,6 +114,6 @@ class Plant:
 class CompletedPlant(Item):
 	def __init__(self, name, desc, value, grade, type):
 		super().__init__(name, desc, value)
-		self.grade = grade
+		self.grade = grade	#	Currently, a plant's grade has very little mechanical effect, since it's an obtuse system to the player
 		self.type = type
 	

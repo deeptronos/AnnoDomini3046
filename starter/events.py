@@ -2,7 +2,7 @@ import random
 from gametime import GameTime
 from item import Item
 from garden import Garden
-from plant import plantGrades, Seed
+from plant import plantGrades, Seed, CompletedPlant
 from NPC import BountyHunter
 from fieldOffice import FieldOffice
 from pets import PetEgg
@@ -110,7 +110,7 @@ gardenSupplyVendor.goodbye = "Come back soon!"
 #gardenSupplyVendor.purchaseMessage = "Enjoy it!"
 
 petStoreVendor = VendorEvent()
-petStoreVendor.vendorItems = [PetEgg("Puppy", "a cute little pet dog", 100, "dog"), PetEgg("Kitten", "a sweet little newborn kitten", 100, "cat"), PetEgg("Gremling", "an odd yet charming little creature", 120, "gremlin"), PetEgg("Rat", "a playful, handsome little rat", 80, "rat"), PetEgg("Alien", "a strange being that looks unline anything you've seen before", 250, "Alien") ]
-petStoreVendor.greeting = "Welcome to my pet store! Please browse what friends we have available, and be open-minded about letting them become a part of your life :)"
+petStoreVendor.vendorItems = [PetEgg("Puppy Egg", "a cute little pet dog", 100, "dog"), PetEgg("Kitten Egg", "a sweet little newborn kitten", 100, "cat"), PetEgg("Gremling Egg", "an odd yet charming little creature", 120, "gremlin"), PetEgg("Rat Egg", "a playful, handsome little rat", 80, "rat"), PetEgg("Alien Egg", "a strange being that looks unlike anything you've seen before", 250, "Alien"), CompletedPlant("Pet Food", "food for a healthy pet", 5, 3, "nonplant") ]
+petStoreVendor.greeting = "Welcome to my pet store! Please browse what friends we have available :)"
 petStoreVendor.goodbye = "See ya around!"
 

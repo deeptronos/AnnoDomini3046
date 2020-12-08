@@ -5,6 +5,7 @@ import updater
 
 import random
 import os
+import math
 
 #	TODO: add value calculation; add some way to sell pets?
 
@@ -19,16 +20,18 @@ class PetEgg(Item):
 	def hatch(self):
 		petName = input("What would you like to name your new pet? ").strip()
 		
-		pet = Pet(petName, self.petType, 3)	#	Pets hatched from egg have default currentSoul of "neutral"
+		pet = Pet(petName, self.petType, 3, self.value)	#	Pets hatched from egg have default currentSoul of "neutral"
 		pet.loc = self.loc
 		
 		return pet
 
 class Pet():
-	def __init__(self, name, petType, currentSoul):
+	def __init__(self, name, petType, currentSoul, petVal):
 		self.name = name
 		self.type = petType	#	Superficial str only used when displaying info about pet. Has no effect on its attributes or methods or anything 
 		self.loc = None
+		self.value = float(petVal)
+		self.initValue = self.value
 		
 		self.alive 		= True
 		self.overfed 	= False
@@ -60,7 +63,7 @@ class Pet():
 	
 	def dailyUpdate(self):
 		self.age += 1
-		
+		self.value += self.initValue * (math.sqrt(self.age)/10)	#	Very basic function y = initValue * (sqrt(self.age)/10) to increase value over time
 		for i in self.mainAttributes:	#	Loop through each attribute stored in mainAttributes...
 			i = clamp(i, 1, 5)	#	ensure they're constrained between 1 and 5
 		
@@ -108,21 +111,24 @@ class Pet():
 		if self.stages[self.currentStage] != "baby":
 			if self.happiness > happinessDecrement:
 				self.happiness -= happinessDecrement
+		if self.bathroom >= 4.5 and self.health > 1 and self.happiness > 1:	#	If they have a high bathroom stat...
+			self.health -= 1
+			self.happiness -= 1
 
 	def checkStrikes(self):
 		if self.overfed == True:
 			self.strikes += 1
 			self.connection -= 1
+			self.value -= self.value/10
 			
 		if self.happiness == 5 and self.bathroom == 1 and self.stomach >= 4:
 			if self.strikes > 0:
 				self.strikes -= 1	#	Add some leniency - If the pet has full happiness, and doesn't need to use the bathroom, and is mostly full, we'll remove a strike
 			
 		if self.strikes == self.strikeMax:
+			self.value = 0	#	Just to make sure nothing funny happens
 			self.alive = False
 			self.die()
-			print("STRIEK MAX ACHEIEVED, PET ELIMINATED")
-			input("cotinue?")
 	
 	def lifeUpdate(self):
 		if self.age < 7 and self.currentStage != 0:	#	Baby lasts from age 0-6
@@ -147,7 +153,8 @@ class Pet():
 			visStr += "⎬"
 			return visStr
 		
-		outStr = "Your pet " + self.type + ", " + self.name.capitalize() +"\n\n"
+		outStr = "Your pet " + self.type.lower() + ", " + self.name.capitalize() +"\n\n"
+		outStr += self.name.capitalize() + "'s age: " + self.stages[self.currentStage] + "\n\n"
 		#	Creating and appending the attribute meter strings:
 		for i in range(len(attributeNames)):	#	For each string in attributeNames...
 			attrMeterStr = ""	#	Make a new str
@@ -167,7 +174,7 @@ class Pet():
 		updater.dailyUpdateDeregister(self)
 		self.loc = None
 		print
-		
+
 	def feed(self):
 		if self.stomach < 5:
 			self.stomach += 1	#	Increase stomach
@@ -177,6 +184,9 @@ class Pet():
 				
 			if self.happiness < 5 and self.stomach > 3:	#	Increase happiness
 				self.happiness += 1
+			if self.health < 5 and self.stomach > 3:
+				self.health += .5
+			
 			return True	
 			
 		elif self.stomach == 5:	
@@ -196,11 +206,14 @@ class Pet():
 			self.happiness += 1
 		
 		if self.connection < 5:	#	Increase connection
-			self.connection += 1
+			self.connection += 0.25
 			
 		if self.bathroom < 5:
 			self.bathroom += 1
-			
+		
+		if self.health < 5 and self.happiness > 4:
+			self.health += 0.5
+		
 		return True
 	def clean(self):
 		if self.bathroom > 1:
