@@ -33,6 +33,7 @@ class VendorEvent(Event):
         for i in self.vendorItems:
             if i.name.lower() == itemName:
                 return i
+        return False
 
 class SleepEvent(Event):
     def __init__(self, gameTimeObject):

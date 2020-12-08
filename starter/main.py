@@ -194,11 +194,16 @@ def gsVendor(event):
      commandWords = command.split()
    
      if commandWords[0].lower() == "buy":
-         if event.vendorHasItem(command[4:]):
-             item = event.getVendorItemByName(command[4:])
-             bought = player.buy(item)
-             commandSuccess = False
-             
+         vendorHasItem = event.vendorHasItem(command[4:])
+         if vendorHasItem:
+           item = event.getVendorItemByName(command[4:])
+           
+           bought = player.buy(item)
+           
+         else:
+           print("That item isn't available for purchase!")
+           
+         commandSuccess = False
      elif commandWords[0].lower() == "return":
          break
       
@@ -227,8 +232,11 @@ def petVendor(event):
          if event.vendorHasItem(command[4:]):
              item = event.getVendorItemByName(command[4:])
              bought = player.buy(item)
-             commandSuccess = False
              
+         else:
+           print("That isn't available for purchase!")
+           commandSuccess = False
+           
      elif commandWords[0].lower() == "return":
          break
       
@@ -519,7 +527,7 @@ def accessPet(event):
             print("You can't feed that to your pet!")
             commandSuccess = False
             continue
-          print("feeding this hoe")
+          
           feed = event.eventPet.feed()
           player.items.remove(food)
           food.loc = None
