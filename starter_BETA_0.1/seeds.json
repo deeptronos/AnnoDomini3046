@@ -1,0 +1,82 @@
+{
+	"seeds": {
+		"crop": {
+			"potato": {
+				"plantName":"Potato", "desc":"a classic thing to eat. a hardy, respectable crop.", "value":0, "growthDuration":7, "seedPrice":1, "plantPrice":2.5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"corn": {
+				"plantName":"Corn", "desc":"a delicious snack when Popped.", "value":0, "growthDuration":6, "seedPrice":1.25, "plantPrice":3, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"tomato": {
+				"plantName":"Tomato", "desc":"a gross little mean little vegetable.", "value":0, "growthDuration":5, "seedPrice":1.5, "plantPrice":3.7, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"spryngradish": {
+				"plantName":"Spryng Radish", "desc":"a crunchy, tasty root vegetable that flourishes in the spryngtyme.", "value":0, "growthDuration":6, "seedPrice":2, "plantPrice":5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"otomradish": {
+				"plantName":"Otom Radish", "desc":"a crunchy, hardy root vegetable that will still thrive in Otom.", "value":0, "growthDuration":4, "seedPrice":2.5, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"cucumber": {
+				"plantName":"Cucumber", "desc":"A watery vine-plant.", "value":0, "growthDuration":9, "seedPrice":1.5, "plantPrice":7, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"cabbage": {
+				"plantName":"Cabbage", "desc":"A crispy, leafy plant", "value":0, "growthDuration":4, "seedPrice":2, "plantPrice":7, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"carrot": {
+				"plantName":"Cabbage", "desc":"Well known for its potency when used to enhance eyesight", "value":0, "growthDuration":5, "seedPrice":2.25, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"broccoli": {
+				"plantName":"Broccoli", "desc":"A healthy green that loves to get stuck in your teeth", "value":0, "growthDuration":5, "seedPrice":5, "plantPrice":12.5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"cauliflower": {
+				"plantName":"Cauliflower", "desc":"Kind of like white broccoli", "value":0, "growthDuration":4, "seedPrice":4, "plantPrice":9.5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			},
+			"romanescobroccoli": {
+				"plantName":"Romanesco Broccoli", "desc":"A distinctly unique flavor and beautiful form elevate this from your everyday broccoli", "value":0, "growthDuration":7, "seedPrice":16, "plantPrice":28.5, "radiation":0, "exotic":false, "plantType":"crop", "season":"Otom"
+			},
+			"romanescocauliflower": {
+				"plantName":"Romanesco Cauliflower", "desc":"Kind of like white broccoli, but with a beautiful form reminiscent of fractals", "value":0, "growthDuration":6, "seedPrice":19, "plantPrice":30, "radiation":0, "exotic":false, "plantType":"crop", "season":"Spryng"
+			}
+
+		
+		},
+		"flower": {
+			"lavender": {
+					"plantName":"Lavender", "desc":"a lavender plant, blooms with radiant purple flowers.", "value":5, "growthDuration":5, "seedPrice":2.5, "plantPrice":5, "radiation":0, "exotic":false, "plantType":"flower", "season":"Spryng"
+				},
+			"rose": {
+				"plantName":"Rose", "desc":"a beautiful rose plant, blooms into deep, lovely reds.", "value":5, "growthDuration":7, "seedPrice":2.5, "plantPrice":10, "radiation":0, "exotic":false, "plantType":"flower", "season":"Otom"
+			},
+			"laserlily": {
+				"plantName":"Laser Lily", "desc":"a burnt orange plant that blooms with piercingly-incandescent flowers that are traditionally given to young students starting a new school year.", "value":5, "growthDuration":10, "seedPrice":5, "plantPrice":17, "radiation":0, "exotic":false, "plantType":"flower", "season":"Otom"
+			}
+		},
+		"illicit": {
+			"illicitPlant": {
+				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"illicit", "season":"season"
+			}
+		},
+		"rare": {
+			"shimmeringlovely": {
+				"plantName":"Shimmering Lovely", "desc":"a diamond plant, blooms into deep, lovely iridescents.", "value":2000, "growthDuration":7, "seedPrice":2000, "plantPrice":3500, "radiation":0, "exotic":true, "plantType":"rare", "season":"Spryng"
+			},
+			"ultrarose": {
+				"plantName":"Ultra Rose", "desc":"a rose plant that grows an enormous, beautiful rose every time. spiders love to make their homes in them.", "value":2000, "growthDuration":5, "seedPrice":2000, "plantPrice":3500, "radiation":0, "exotic":true, "plantType":"rare", "season":"Otom"
+			},
+			"fishermanswish": {
+				"plantName":"Fisherman's Wish", "desc":"an instricate, green-blue flower, entirely unique in its appearence and genetics", "value":4500, "growthDuration":7, "seedPrice":2000, "plantPrice":4500, "radiation":0, "exotic":true, "plantType":"rare", "season":"Otom"
+			},
+			"hellslilac": {
+				"plantName":"Hell's Lilac", "desc":"blooms into a bright red-orange flower. known to be exceptionally beutiful - and exceptionally poisonous", "value":4750, "growthDuration":7, "seedPrice":2000, "plantPrice":4750, "radiation":0, "exotic":true, "plantType":"rare", "season":"Spryng"
+			}
+		},
+		"test": {
+			"testPlant": {
+				"plantName":"plantName", "desc":"desc", "value":0, "growthDuration":0, "seedPrice":0, "plantPrice":0, "radiation":0, "exotic":false, "plantType":"plantType", "season":"season"
+			},
+			"demo": {
+				"plantName":"Demo", "desc":"grows quickly", "value":0, "growthDuration":1, "seedPrice":2.5, "plantPrice":6, "radiation":0, "exotic":false, "plantType":"crop", "season":"season"
+			}
+		}
+	}
+}

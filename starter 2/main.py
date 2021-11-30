@@ -18,54 +18,6 @@ player = Player()
 gT = GameTime()
 #seeds = {}
 
-#Menu of Improvements:
-#  Drop comand
-#  Wait command
-#  Me command
-#  Bigger world
-#  Inspect command
-#  Healing Items
-# Stacking items
-# Regeneration
-# Events
-# Player attributes
-# Currency
-# Characters
-
-  # "Choose your own" Improvements:
-#  "Welcome" startup message/Light tutorial
-#  Vendors
-#    Multiple unique vendors
-#    Some of which respond to in-game calendar (Ex. gardening supply vendor)
-#  In-game time/Calendar
-#    Day, Month, Year system
-#    Events gated behind calendar conditions (Ex. Farmer's Market only open on weekends)
-#    Dynamic seasons - Ex. cause changes in vendor items
-#  Dynamic, Interactive Gardens/Garden System
-#    Actions can be performed on specific garden's plots ("plant", "water", etc. )
-#    Gardens contain dirt plots, each of which has its own attributes
-#    Garden updates its plots based on in-game time
-#  Sleeping
-#  Extensive, Interactive Pet Systems
-#    Interactive pet-care system
-#    Dynamic pet behavior - Pet's stats change in response to player input, in-game time, and change on their own as well
-#  "Markets" where the player can list/sell their own items
-#  Extensive Plants System
-#    Dynamic plant behavior that responds to player input and in-game time
-#    "Grade" system that dynamically calculates a plant's grade based on player's care of it
-#  File Reading
-#    Interprets JSON in external files and translates it into Python objects
-#  Storing a large amount of unique items for gameplay via JSON file
-#  Extensive "help()" function, with tips for gameplay
-#  "Header" function that adds to the graphical interface
-#  "Bounty Hunter" Systems
-#    In-game gambling system, where a player's "wager" alters odds of a reward
-#    Offers an opportunity for the player to receive interesting, valuable items (rare seeds)
-#    Random generation of unique bounty hunter characters, each of whom have attributes, and whose attributes effect gameplay
-
-
-
-
 
 #    TODO: make more seeds/plants in seeds.json; 
 # TODO: go through JSON -> seed -> plant -> CompletePlant process and check for bugs; 
